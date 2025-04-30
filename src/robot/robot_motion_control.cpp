@@ -5,10 +5,10 @@
 #include "wireless.h"
 #include "robot_motion_control.h"
 
-#define UTURN
+// #define UTURN
 // #define CIRCLE
 // #define JOYSTICK
-// #define YOUR_TRAJECTORY
+#define YOUR_TRAJECTORY
 
 extern RobotMessage robotMessage;
 extern ControllerMessage controllerMessage;
@@ -96,6 +96,97 @@ void followTrajectory() {
 
     #ifdef YOUR_TRAJECTORY
     // TODO: Create a state machine to define your custom trajectory!
+    switch (state) {
+        case 0:
+            // Until robot has achieved a x translation of 1m
+            if (robotMessage.x <= .25) {
+                // Move in a straight line forward
+                robotVelocity = 0.2;
+                k = 0;
+            } else {
+                // Move on to next state
+                state++;
+            }
+            break;
+        case 1:
+            // Until robot has achieved a 90 deg turn in theta
+            if (robotMessage.theta <= M_PI / 2) {
+                // Turn in a circle with radius 25cm
+                robotVelocity = 0.2;
+                k = 1/0.25;
+            } else {
+                state++;
+            }
+            break;
+        case 2:
+            // Until robot has achieved a y translation of 1m
+            if (robotMessage.y <= .5) {
+                // Move in a straight line forward
+                robotVelocity = 0.2;
+                k = 0;
+            } else {
+                // Move on to next state
+                state++;
+            }
+            break;
+        case 3:
+            // Until robot has achieved a 180 deg turn in theta
+            if (robotMessage.theta <= M_PI) {
+                // Turn in a circle with radius 25cm
+                robotVelocity = 0.2;
+                k = 1/0.25;
+            } else {
+                state++;
+            }
+            break;
+        case 4:
+            // Until robot has achieved a x translation of -1m
+            if (robotMessage.x >= 0) {
+                // Move in a straight line forward
+                robotVelocity = 0.2;
+                k = 0;
+            } else {
+                // Move on to next state
+                state++;
+            }
+            break;
+        case 5:
+            // Until robot has achieved a 270 deg turn in theta
+            if (robotMessage.theta <= 3* M_PI / 2) {
+                // Turn in a circle with radius 25cm
+                robotVelocity = 0.2;
+                k = 1/0.25;
+            } else {
+                state++;
+            }
+            break;
+        case 6:
+            // Until robot has achieved a y translation of -1m
+            if (robotMessage.y >= 0.25) {
+                // Move in a straight line forward
+                robotVelocity = 0.2;
+                k = 0;
+            } else {
+                // Move on to next state
+                state++;
+            }
+            break;
+        case 7:
+            // Until robot has achieved a 360 deg turn in theta
+            if (robotMessage.theta <= 2 * M_PI) {
+                // Turn in a circle with radius 25cm
+                robotVelocity = 0.2;
+                k = 1/0.25;
+            } else {
+                state++;
+            }
+            break;
+        default:
+            // If none of the states, robot should just stop
+            robotVelocity = 0;
+            k = 0;
+            break;
+    }
 
 
 
