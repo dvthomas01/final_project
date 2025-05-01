@@ -44,91 +44,21 @@ extern struct euler_t {
     float roll;
  } ypr;
 
-// Wrapper function to initialize all motors
-void setupMotors(MotorDriver *motors) 
-{
-    for (uint8_t i = 0; i < NUM_MOTORS; i++)
-        motors[i].setup();
-}
 
-// Robot motion hardware setup process
-// Input: Array of motorDriver objects representing each motor on the robot
-// Output: Yaw (float) at startup
-float setupDrive(MotorDriver *motors) {
-    // Setup the motor drivers
-    setupMotors(motors);
+jetsonOutput jetsonComms() {
+    // Read state and input, echo state
+    if (Serial1.available()) {          // data from Jetson
+        String line = Serial1.readStringUntil('\n');
+        Serial.print  ("RX: "); Serial.println(line);
+        Serial1.print ("ACK ");           // bounce something back
+        Serial1.println(line);            // → Jetson reads "ACK HELLO"
 
-    float initialYaw = ypr.yaw;
-    return initialYaw;
-}
+        jetsonOutput output;
+        output.COMMAND = SETUP;
 
-/*
-void straight() {
-    double speeds = 1;
-    motors[0].drive(speeds);
-    motors[1].drive(speeds);
-    motors[2].drive(0);
-    motors[3].drive(0);
-}
-
-void rotate(int dir) { // 1 = right (clockwise), -1 = left (counterclockwise)
-    double speeds[2] = {rotateSpeedR, rotateSpeedL};
-    float rotationSetPoint = initialYaw - 90;
-
-    if (dir == -1) {
-        // Flip the speeds and set point around
-        speeds[0] = rotateSpeedR * -1; speeds[1] = rotateSpeedL * -1;
-        rotationSetPoint = initialYaw + 180;
+        return output;
     }
-
-    // Set the motors to rotate
-    motors[0].drive(speeds[0]);
-    motors[1].drive(speeds[1]);
-    
-    float yawDiff = 0;
-    while (yawDiff < 90)
-    {
-        yawDiff = abs(initialYaw - ypr.yaw);
-        if (yawDiff >= 90) {                 
-            // Stop both motors
-            motors[0].drive(0);
-            motors[1].drive(0);
-        }
-        
-        Serial.println(initialYaw);           Serial.print("\t");
-        Serial.print(ypr.yaw);                Serial.print("\t");
-        Serial.print(yawDiff);                Serial.print("\t");
-        delay(10);
-    }
-
-    initialYaw = rotationSetPoint; //Reset the initialYaw for the next rotation
 }
-    */
-/*
-void align() {
-    double speed = alignSpeed;
-    if (t[0] > 0) {
-        speed = -alignSpeed;
-    }
-
-    if (abs(t[0]) > 0.1) {
-
-        // Set the motors to rotate
-        driveMotors[0].drive(speed);
-        driveMotors[1].drive(speed);
-        
-        while (abs(t[0] > 0.5))
-        {
-            if (abs(t[0]) <= 0.5) {
-            driveMotors[0].drive(0);
-            driveMotors[0].drive(0);
-            }
-            Serial.println(t[0]);
-        }
-    }
-
-}
-*/
 
 void straightline() {
     trajectoryMode trajectory = FORWARD;
