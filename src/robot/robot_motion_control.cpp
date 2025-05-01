@@ -42,7 +42,7 @@ void setWheelVelocities(float robotVelocity, float k){
 }
 
 // Makes robot follow a trajectory
-void followTrajectory(int TrajectoryList) {
+void followTrajectory(trajectoryMode trajectory) {
 
 /*
     #ifdef JOYSTICK
@@ -58,18 +58,33 @@ void followTrajectory(int TrajectoryList) {
     k = 1/0.5;
     setWheelVelocities(robotVelocity, k);
     #endif 
-*/ if (TrajectoryList == 0){
-    setWheelVelocities(0, 0);
-} 
+    */ 
+    if (trajectory == STOP){
+        setWheelVelocities(0, 0);
+    } 
 
-    if (TrajectoryList == 1) {
-    robotVelocity = 0.1;
-    k = 0;
-    setWheelVelocities(robotVelocity, k);
+    if (trajectory == FORWARD) {
+        robotVelocity = 0.1;
+        k = 0;
+        setWheelVelocities(robotVelocity, k);
     }
 
-    if (TrajectoryList == 2) {
-    setWheelVelocities(.1, -1);
+    if (trajectory == BACKWARD) {
+        robotVelocity = -0.1;
+        k = 0;
+        setWheelVelocities(robotVelocity, k);
+    }
+
+    if (trajectory == CW) {
+        robotVelocity = 0.1;
+        k = -1;
+        setWheelVelocities(robotVelocity, k);
+    }
+
+    if (trajectory == CCW) {
+        robotVelocity = 0.1;
+        k = 1;
+        setWheelVelocities(robotVelocity, k);
     }
 
 
