@@ -6,7 +6,89 @@
 // distance from back wheel to center in meters
 #define b 0.2
 
-void followTrajectory();
+// Define enumeration of vehicle trajectories for followTrajectory
+enum trajectoryMode {
+    STOP,
+    FORWARD,
+    BACKWARD,
+    CW,
+    CCW
+};
+
+// Create templates for functions required for state machine
+
+
+// LOW-LEVEL FUNCTIONS
+
+
+// Initialize Robot - First thing to call on motor power up
+void setup();
+
+// Command robot to rotate 90 degrees CW or CCW
+// 1 = CW, -1 = CCW
+void rotate(int dir);
+
+// Draw bin into center cavity
+// If limit switch activated, (async) sets motors to brake
+// If limit switch deactivated, (async) spins flywheels until it is
+// Called in main control loop to guarantee bin held while in motion
+void grabBin();
+
+// Spit bin out from center cavity
+// Just spins flywheels such that bin is ejected for sufficient time (1 sec?)
+void depositBin();
+
+// Setup function, determines what position (assoc. AprilTag ID) bins start in
+// Returns bin color order from left (index 0) to right (index 2) as char array
+// b - blue, y - yellow, r - red
+char colorDetectStore();
+
+
+// HIGH-LEVEL FUNCTIONS
+
+
+// Go to ramp start(?), perform sequence of commands to go from ramp start to end
+void drive_up_ramp();
+
+// From current position, go to reference starting position for bin pickup
+// based on AprilTag waypoint(s)
+void drive_to_pickup();
+
+// Find AprilTag of ID tagID, get in rough alignment to it
+void align(int tagID);
+
+// Ensure the center x,y position of in-frame AprilTag is correct based on specified tag
+// Gets robot aligned with bin start/end spot for bin pickup/dropoff
+void fine_align(int tagID);
+
+// Drives forward while keeping AprilTag x,y positon fixed while driving to per-tag predefined
+// z-distance for picking up bin
+void approach_pickup_pose(int tagID);
+
+
+// TODO: Change following if we decide to have unique backup procedure per AprilTag
+
+// Back up a fixed amount after depositing bin
+void backUp();
+
+// Back up a fixed amount after depositing bin
+// Distance is defined per-tag
+// void backUp(int tagID);
+
+// TODO: Following may not be necessary, especiallyu= if we only drive in straight lines for robustness
+
+// Drive in S-shape to avoid the ramp and align with AprilTag 8
+void s_maneuver_align(int tagID);
+
+
+// HELPER FUNCTIONS
+
+// Follow the specified trajectory
+void followTrajectory(trajectoryMode Trajectory);
+
+// Updates Odometry 
+// TODO: Do we need this?
 void updateOdometry();
+
 
 #endif

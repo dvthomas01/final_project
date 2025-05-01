@@ -3,6 +3,11 @@
 
 #define NUM_MOTORS 4
 
+// 1 Encoder per side of robot (per set of motors in parallel), no encoders on flywheels
+// This means we only PID control the rear wheels, and the front wheels just echo it
+// This is fune, because the front wheels are omni wheels and will always slip first
+#define NUM_ENCODERS 2 
+
 #define Kp 0.25
 #define Ki 0.01
 #define Kd 0

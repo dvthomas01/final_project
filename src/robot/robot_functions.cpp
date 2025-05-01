@@ -44,22 +44,25 @@ extern struct euler_t {
     float roll;
  } ypr;
 
-/*
-void setupDrive() {
-    // Setup the motor drivers
-    for (uint8_t i = 0; i < 4; i++) {
-        motors[i].setup();
-    }
-
-    initialYaw = ypr.yaw;
-}
-
-void setupMotors() 
+// Wrapper function to initialize all motors
+void setupMotors(MotorDriver *motors) 
 {
-    for (uint8_t i = 0; i < 4; i++)
+    for (uint8_t i = 0; i < NUM_MOTORS; i++)
         motors[i].setup();
 }
 
+// Robot motion hardware setup process
+// Input: Array of motorDriver objects representing each motor on the robot
+// Output: Yaw (float) at startup
+float setupDrive(MotorDriver *motors) {
+    // Setup the motor drivers
+    setupMotors(motors);
+
+    float initialYaw = ypr.yaw;
+    return initialYaw;
+}
+
+/*
 void straight() {
     double speeds = 1;
     motors[0].drive(speeds);
@@ -128,12 +131,15 @@ void align() {
 */
 
 void straightline() {
-    followTrajectory(1);
+    trajectoryMode trajectory = FORWARD;
+    followTrajectory(trajectory);
 }
 
-void rotate(int dir) { // 1 = right (clockwise), -1 = left (counterclockwise)
+
+void rotate(int dir) {
+    // Update Initial IMU readings
     readIMU(false);
-    float initialYaw = ypr.yaw;
+    float statingYaw = ypr.yaw;
     // double speeds[2] = {rotateSpeedR, rotateSpeedL};
     // float rotationSetPoint = initialYaw - 90;
 
@@ -143,32 +149,47 @@ void rotate(int dir) { // 1 = right (clockwise), -1 = left (counterclockwise)
     //     rotationSetPoint = initialYaw + 180;
     // }
 
-    followTrajectory(2);
+    // Set rotation and goal angle based on direction input
+    trajectoryMode trajectory;
+
+
+    if(dir == 1) {
+        trajectory = CW;
+    } else {
+        trajectory = CCW;   
+    }
+
+    followTrajectory(trajectory);
+
+
+    // Wait until we reach yawGoal degrees rotaton in specified direction
     updatePIDs();
     float yawDiff = 0;
-    while (yawDiff < 90)
+    float yawGoal = 90; // Define out here so we only need to change it once if needed
+    while (abs(yawDiff) < yawGoal)
     {
-        yawDiff = abs(initialYaw - ypr.yaw);
+        yawDiff = abs(statingYaw - ypr.yaw);
         readIMU(false);
-        if (yawDiff >= 90) {                 
-            // Stop both motors
-           followTrajectory(0);
+        if (yawDiff >= yawGoal) {                 
+           // Stop both motors
+           trajectory = STOP;
+           followTrajectory(trajectory);
            updatePIDs();
         }
         
-        Serial.print(initialYaw);           Serial.print("\t");
+        Serial.print(statingYaw);           Serial.print("\t");
         Serial.print(ypr.yaw);                Serial.print("\t");
         Serial.println(yawDiff);                Serial.print("\t");
         delay(10);
     }
 }
 
-void pickUpBox() {
+void grabBin() {
     double speeds[2] = {driveUpSpeed, driveUpSpeed};
     
 
 }
 
-void dropOffBox() {
+void depositBin() {
 
 }
