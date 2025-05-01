@@ -13,7 +13,7 @@ int main() {
     rs2::config  cfg;
     cfg.enable_stream(RS2_STREAM_COLOR, 640, 480, RS2_FORMAT_BGR8, 30);
     pipe.start(cfg);
-    std::cout << "🎥  Streaming color. Press ESC to quit.\n";
+   
 
     // hsv ranges
     std::map<std::string,std::vector<std::pair<cv::Scalar,cv::Scalar>>> color_ranges = {
