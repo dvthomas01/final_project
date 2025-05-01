@@ -27,7 +27,7 @@ import serial  # pip install pyserial
 # ──────────────────────────────────────────────────────────────────────────────
 # Serial link helper (kept local so Controller is self‑contained)
 # ──────────────────────────────────────────────────────────────────────────────
-SERIAL_PORT = "/dev/ttyUSB0"
+SERIAL_PORT = "/dev/ttyTHS0"
 BAUD        = 115200
 SER_TIMEOUT = 0.1  # seconds
 
