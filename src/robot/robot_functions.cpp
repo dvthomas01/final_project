@@ -74,42 +74,46 @@ void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwi
     double left = 0;
     double right = 0;    
     
-    if ((initialYaw > -90) && (dir = 1))
+    if ((initialYaw > -90) && (dir == 1))
     {
         float yawSetpoint = initialYaw - 90;
         if (currentYaw > yawSetpoint){
-            double left = 0.1;
-            double right = -left;
+            left = 0.1;
+            right = -left;
         }
+        Serial.println("Hi4");
     }    
     
-    if ((initialYaw < -90) && (dir = 1)) {
+    if ((initialYaw < -90) && (dir == 1)) {
         float yawSetpoint = initialYaw + 270;
         float yawDiff = abs(yawSetpoint - currentYaw);
         if (((currentYaw > yawSetpoint) && (yawDiff < 90)) || ((currentYaw < yawSetpoint) && (yawDiff > 180))) {
-            double left = 0.1;
-            double right = -left;
+            left = 3;
+            right = -left;
+            Serial.println("Hi");
         }
     }    
     
-    if ((initialYaw < 90) && (dir = -1))
+    if ((initialYaw < 90) && (dir == -1))
     {
         float yawSetpoint = initialYaw + 90;
         if (currentYaw > yawSetpoint) {
-            double left = -0.1;
-            double right = - left;
+            left = -0.1;
+            right = - left;
         }
+        Serial.println("Hi2");
     }    
     
-    if ((initialYaw > 90) && (dir = -1)) {
+    if ((initialYaw > 90) && (dir == -1)) {
         float yawSetpoint = initialYaw - 270;
         float yawDiff = abs(yawSetpoint - currentYaw);
         if (((currentYaw < yawSetpoint) && (yawDiff < 90)) || ((currentYaw > yawSetpoint) && (yawDiff > 180))) {
-            double left = -0.1;
-            double right = -left;
+            left = -0.1;
+            right = -left;
         }
+        Serial.println("Hi3");
     }    
-    
+    Serial.println(left);
     updateSetpoints(left, right);
     updatePIDs();
 }
