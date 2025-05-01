@@ -31,7 +31,8 @@ enum commands {
     DRIVE_UP_RAMP,
     DRIVE_DOWN_RAMP,
     COLOR_DETECT_STORE,
-    DRIVE_TO_PICKUP
+    DRIVE_TO_PICKUP,
+    NO_STATE_DETECTED
 };
 
 // Structure to package JetsonComms output
@@ -48,9 +49,6 @@ struct jetsonOutput {
 
 // LOW-LEVEL FUNCTIONS
 
-
-// Initialize Robot - First thing to call on motor power up
-void setup();
 
 // Command robot to rotate 90 degrees CW or CCW
 // 1 = CW, -1 = CCW

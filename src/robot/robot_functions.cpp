@@ -46,6 +46,8 @@ extern struct euler_t {
 
 
 jetsonOutput jetsonComms() {
+    jetsonOutput output;
+
     // Read state and input, echo state
     if (Serial1.available()) {          // data from Jetson
         String line = Serial1.readStringUntil('\n');
@@ -53,11 +55,13 @@ jetsonOutput jetsonComms() {
         Serial1.print ("ACK ");           // bounce something back
         Serial1.println(line);            // → Jetson reads "ACK HELLO"
 
-        jetsonOutput output;
-        output.COMMAND = SETUP;
 
+        output.COMMAND = SETUP;
         return output;
     }
+
+    output.COMMAND = NO_STATE_DETECTED;
+    return output;
 }
 
 void straightline() {
