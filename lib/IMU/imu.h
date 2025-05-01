@@ -28,6 +28,7 @@ public:
     GyroReadings getGyroReadings();
     EulerAngles getEulerAngles();
 };
-
+void setupIMU();
+void readIMU(bool printData);
 extern IMU imu;
 #endif
