@@ -70,52 +70,48 @@ void straightline() {
 }
 
 
-void rotate(int dir) {
-    // Update Initial IMU readings
-    readIMU(false);
-    float statingYaw = ypr.yaw;
-    // double speeds[2] = {rotateSpeedR, rotateSpeedL};
-    // float rotationSetPoint = initialYaw - 90;
-
-    // if (dir == -1) {
-    //     // Flip the speeds and set point around
-    //     speeds[0] = rotateSpeedR * -1; speeds[1] = rotateSpeedL * -1;
-    //     rotationSetPoint = initialYaw + 180;
-    // }
-
-    // Set rotation and goal angle based on direction input
-    trajectoryMode trajectory;
-
-
-    if(dir == 1) {
-        trajectory = CW;
-    } else {
-        trajectory = CCW;   
-    }
-
-    followTrajectory(trajectory);
-
-
-    // Wait until we reach yawGoal degrees rotaton in specified direction
-    updatePIDs();
-    float yawDiff = 0;
-    float yawGoal = 90; // Define out here so we only need to change it once if needed
-    while (abs(yawDiff) < yawGoal)
+void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
+    double left = 0;
+    double right = 0;    
+    
+    if ((initialYaw > -90) && (dir = 1))
     {
-        yawDiff = abs(statingYaw - ypr.yaw);
-        readIMU(false);
-        if (yawDiff >= yawGoal) {                 
-           // Stop both motors
-           trajectory = STOP;
-           followTrajectory(trajectory);
-           updatePIDs();
+        float yawSetpoint = initialYaw - 90;
+        if (currentYaw > yawSetpoint){
+            double left = 0.1;
+            double right = -left;
         }
-        
-        Serial.print(statingYaw);           Serial.print("\t");
-        Serial.print(ypr.yaw);                Serial.print("\t");
-        Serial.println(yawDiff);                Serial.print("\t");
-        delay(10);
-    }
+    }    
+    
+    if ((initialYaw < -90) && (dir = 1)) {
+        float yawSetpoint = initialYaw + 270;
+        float yawDiff = abs(yawSetpoint - currentYaw);
+        if (((currentYaw > yawSetpoint) && (yawDiff < 90)) || ((currentYaw < yawSetpoint) && (yawDiff > 180))) {
+            double left = 0.1;
+            double right = -left;
+        }
+    }    
+    
+    if ((initialYaw < 90) && (dir = -1))
+    {
+        float yawSetpoint = initialYaw + 90;
+        if (currentYaw > yawSetpoint) {
+            double left = -0.1;
+            double right = - left;
+        }
+    }    
+    
+    if ((initialYaw > 90) && (dir = -1)) {
+        float yawSetpoint = initialYaw - 270;
+        float yawDiff = abs(yawSetpoint - currentYaw);
+        if (((currentYaw < yawSetpoint) && (yawDiff < 90)) || ((currentYaw > yawSetpoint) && (yawDiff > 180))) {
+            double left = -0.1;
+            double right = -left;
+        }
+    }    
+    
+    updateSetpoints(left, right);
+    updatePIDs();
 }
 
 void grabBin() {

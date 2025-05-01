@@ -32,12 +32,37 @@ void loop() {
     if (previousCommand != output.COMMAND) initialYaw = ypr.yaw;
     switch (output.COMMAND)
     {
-        case 0:
+        case SETUP:
         break;
-        case 1:
+        case ALIGN:
+        break;
+        case ROTATE_CW:
         rotate(initialYaw, currentYaw, output.INPUT_VAL);
         break;
-        case 2:
+        case ROTATE_CCW:
+        rotate(initialYaw, currentYaw, output.INPUT_VAL);
+        break;
+        case FINE_ALIGN:
+        break;
+        case APPROACH_PICKUP_POSE:
+        break;
+        case GRAB_BIN:
+        break;
+        case FIXED_BACKUP:
+        break;
+        case DEPOSIT_BIN:
+        break;
+        case BACKUP:
+        break;
+        case S_MANEUVER_ALIGN:
+        break;
+        case DRIVE_UP_RAMP:
+        break;
+        case DRIVE_DOWN_RAMP:
+        break;
+        case COLOR_DETECT_STORE:
+        break;
+        case DRIVE_TO_PICKUP:
         break;
         default:
     }
