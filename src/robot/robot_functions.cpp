@@ -44,91 +44,21 @@ extern struct euler_t {
     float roll;
  } ypr;
 
-// Wrapper function to initialize all motors
-void setupMotors(MotorDriver *motors) 
-{
-    for (uint8_t i = 0; i < NUM_MOTORS; i++)
-        motors[i].setup();
-}
 
-// Robot motion hardware setup process
-// Input: Array of motorDriver objects representing each motor on the robot
-// Output: Yaw (float) at startup
-float setupDrive(MotorDriver *motors) {
-    // Setup the motor drivers
-    setupMotors(motors);
+jetsonOutput jetsonComms() {
+    // Read state and input, echo state
+    if (Serial1.available()) {          // data from Jetson
+        String line = Serial1.readStringUntil('\n');
+        Serial.print  ("RX: "); Serial.println(line);
+        Serial1.print ("ACK ");           // bounce something back
+        Serial1.println(line);            // → Jetson reads "ACK HELLO"
 
-    float initialYaw = ypr.yaw;
-    return initialYaw;
-}
+        jetsonOutput output;
+        output.COMMAND = SETUP;
 
-/*
-void straight() {
-    double speeds = 1;
-    motors[0].drive(speeds);
-    motors[1].drive(speeds);
-    motors[2].drive(0);
-    motors[3].drive(0);
-}
-
-void rotate(int dir) { // 1 = right (clockwise), -1 = left (counterclockwise)
-    double speeds[2] = {rotateSpeedR, rotateSpeedL};
-    float rotationSetPoint = initialYaw - 90;
-
-    if (dir == -1) {
-        // Flip the speeds and set point around
-        speeds[0] = rotateSpeedR * -1; speeds[1] = rotateSpeedL * -1;
-        rotationSetPoint = initialYaw + 180;
+        return output;
     }
-
-    // Set the motors to rotate
-    motors[0].drive(speeds[0]);
-    motors[1].drive(speeds[1]);
-    
-    float yawDiff = 0;
-    while (yawDiff < 90)
-    {
-        yawDiff = abs(initialYaw - ypr.yaw);
-        if (yawDiff >= 90) {                 
-            // Stop both motors
-            motors[0].drive(0);
-            motors[1].drive(0);
-        }
-        
-        Serial.println(initialYaw);           Serial.print("\t");
-        Serial.print(ypr.yaw);                Serial.print("\t");
-        Serial.print(yawDiff);                Serial.print("\t");
-        delay(10);
-    }
-
-    initialYaw = rotationSetPoint; //Reset the initialYaw for the next rotation
 }
-    */
-/*
-void align() {
-    double speed = alignSpeed;
-    if (t[0] > 0) {
-        speed = -alignSpeed;
-    }
-
-    if (abs(t[0]) > 0.1) {
-
-        // Set the motors to rotate
-        driveMotors[0].drive(speed);
-        driveMotors[1].drive(speed);
-        
-        while (abs(t[0] > 0.5))
-        {
-            if (abs(t[0]) <= 0.5) {
-            driveMotors[0].drive(0);
-            driveMotors[0].drive(0);
-            }
-            Serial.println(t[0]);
-        }
-    }
-
-}
-*/
 
 void straightline() {
     trajectoryMode trajectory = FORWARD;
@@ -136,52 +66,48 @@ void straightline() {
 }
 
 
-void rotate(int dir) {
-    // Update Initial IMU readings
-    readIMU(false);
-    float statingYaw = ypr.yaw;
-    // double speeds[2] = {rotateSpeedR, rotateSpeedL};
-    // float rotationSetPoint = initialYaw - 90;
-
-    // if (dir == -1) {
-    //     // Flip the speeds and set point around
-    //     speeds[0] = rotateSpeedR * -1; speeds[1] = rotateSpeedL * -1;
-    //     rotationSetPoint = initialYaw + 180;
-    // }
-
-    // Set rotation and goal angle based on direction input
-    trajectoryMode trajectory;
-
-
-    if(dir == 1) {
-        trajectory = CW;
-    } else {
-        trajectory = CCW;   
-    }
-
-    followTrajectory(trajectory);
-
-
-    // Wait until we reach yawGoal degrees rotaton in specified direction
-    updatePIDs();
-    float yawDiff = 0;
-    float yawGoal = 90; // Define out here so we only need to change it once if needed
-    while (abs(yawDiff) < yawGoal)
+void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
+    double left = 0;
+    double right = 0;    
+    
+    if ((initialYaw > -90) && (dir = 1))
     {
-        yawDiff = abs(statingYaw - ypr.yaw);
-        readIMU(false);
-        if (yawDiff >= yawGoal) {                 
-           // Stop both motors
-           trajectory = STOP;
-           followTrajectory(trajectory);
-           updatePIDs();
+        float yawSetpoint = initialYaw - 90;
+        if (currentYaw > yawSetpoint){
+            double left = 0.1;
+            double right = -left;
         }
-        
-        Serial.print(statingYaw);           Serial.print("\t");
-        Serial.print(ypr.yaw);                Serial.print("\t");
-        Serial.println(yawDiff);                Serial.print("\t");
-        delay(10);
-    }
+    }    
+    
+    if ((initialYaw < -90) && (dir = 1)) {
+        float yawSetpoint = initialYaw + 270;
+        float yawDiff = abs(yawSetpoint - currentYaw);
+        if (((currentYaw > yawSetpoint) && (yawDiff < 90)) || ((currentYaw < yawSetpoint) && (yawDiff > 180))) {
+            double left = 0.1;
+            double right = -left;
+        }
+    }    
+    
+    if ((initialYaw < 90) && (dir = -1))
+    {
+        float yawSetpoint = initialYaw + 90;
+        if (currentYaw > yawSetpoint) {
+            double left = -0.1;
+            double right = - left;
+        }
+    }    
+    
+    if ((initialYaw > 90) && (dir = -1)) {
+        float yawSetpoint = initialYaw - 270;
+        float yawDiff = abs(yawSetpoint - currentYaw);
+        if (((currentYaw < yawSetpoint) && (yawDiff < 90)) || ((currentYaw > yawSetpoint) && (yawDiff > 180))) {
+            double left = -0.1;
+            double right = -left;
+        }
+    }    
+    
+    updateSetpoints(left, right);
+    updatePIDs();
 }
 
 void grabBin() {

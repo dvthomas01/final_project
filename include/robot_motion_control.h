@@ -34,7 +34,7 @@ enum commands {
     DRIVE_TO_PICKUP
 };
 
-// define struct to package JetsonComms output
+// Structure to package JetsonComms output
 struct jetsonOutput {
     commands COMMAND;
 
