@@ -59,7 +59,7 @@ jetsonOutput jetsonComms() {
         output.COMMAND = SETUP;
         return output;
     }
-
+    Serial.println("No Connection");
     output.COMMAND = NO_STATE_DETECTED;
     return output;
 }
