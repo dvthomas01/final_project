@@ -15,6 +15,34 @@ enum trajectoryMode {
     CCW
 };
 
+// Define enum of commands for JetsonComms
+enum commands {
+    SETUP,
+    ALIGN,
+    ROTATE_CW,
+    ROTATE_CCW,
+    FINE_ALIGN,
+    APPROACH_PICKUP_POSE,
+    GRAB_BIN,
+    FIXED_BACKUP,
+    DEPOSIT_BIN,
+    BACKUP,
+    S_MANEUVER_ALIGN,
+    DRIVE_UP_RAMP,
+    DRIVE_DOWN_RAMP,
+    COLOR_DETECT_STORE,
+    DRIVE_TO_PICKUP
+};
+
+// define struct to package JetsonComms output
+struct jetsonOutput {
+    commands COMMAND;
+
+    // If INPUT_VAL = 999, COMMAND has no input
+    int INPUT_VAL = 999;
+}; 
+
+
 // Create templates for functions required for state machine
 
 
@@ -47,8 +75,11 @@ char colorDetectStore();
 // HIGH-LEVEL FUNCTIONS
 
 
-// Go to ramp start(?), perform sequence of commands to go from ramp start to end
+// Perform sequence of commands to go from ramp start to ramp top platform
 void drive_up_ramp();
+
+// Perform sequence of commands to go from ramp top platform to ramp end
+void drive_down_ramp();
 
 // From current position, go to reference starting position for bin pickup
 // based on AprilTag waypoint(s)
@@ -79,6 +110,9 @@ void backUp();
 
 // Drive in S-shape to avoid the ramp and align with AprilTag 8
 void s_maneuver_align(int tagID);
+
+// Get current state from Jetson, return jetsonOutput struct with current state and function input
+jetsonOutput jetsonComms();
 
 
 // HELPER FUNCTIONS
