@@ -7,6 +7,9 @@
 #include "robot_motion_control.h"
 #include "RobotFunctions.h"
 
+
+
+
 // Create an instance of the MotorDriver class
 /*
 MotorDriver driveMotors[2] = { {A_DIR1, A_PWM1, 0}, {A_DIR2, A_PWM2, 1} };
@@ -118,21 +121,43 @@ void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwi
     updatePIDs();
 }
 
-void grabBin() {
-
-    double flywheelSpeed = 0.5;
-    motors[2].drive(flywheelSpeed);  
-    motors[3].drive(flywheelSpeed); 
-    delay(3000);
-    motors[2].drive(0);
-    motors[3].drive(0);
+void grabBin(commands currentCommand) {
+    static unsigned long startTime = 0;
+    static bool isActive = false;
+    if (currentCommand != GRAB_BIN) {
+        isActive = false;  
+        return;
+    }
+    if (!isActive) {
+        motors[2].drive(0.5);
+        motors[3].drive(0.5);
+        startTime = millis();
+        isActive = true;
+    }
+    if (millis() - startTime >= 3000) {
+        motors[2].drive(0);
+        motors[3].drive(0);
+        isActive = false;
+    }
 }
 
-void depositBin() {
-    double flywheelSpeed = 0.5;
-    motors[2].drive(flywheelSpeed);  
-    motors[3].drive(-flywheelSpeed); 
-    delay(3000);
-    motors[2].drive(0);
-    motors[3].drive(0);
+void depositBin(commands currentCommand) {
+    static unsigned long startTime = 0;
+    static bool isActive = false;
+
+    if (currentCommand != DEPOSIT_BIN) {
+        isActive = false;  
+        return;
+    }
+    if (!isActive) {
+        motors[2].drive(0.5);
+        motors[3].drive(-0.5);
+        startTime = millis();
+        isActive = true;
+    }
+    if (millis() - startTime >= 3000) {
+        motors[2].drive(0);
+        motors[3].drive(0);
+        isActive = false;
+    }
 }
