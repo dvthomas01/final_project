@@ -58,7 +58,7 @@ jetsonOutput jetsonComms() {
 
     if (input == "HELLO") {
       mySerial.println("ACK HELLO");
-
+      Serial.println("HELLO from robot functions");
       output.COMMAND = NO_STATE_DETECTED;
       return output;
     } 
@@ -90,8 +90,10 @@ jetsonOutput jetsonComms() {
         output.COMMAND = SETUP;
     } else if(input_parsed[0] == "ALIGN"){
         output.COMMAND = ALIGN;
-    } else if(input_parsed[0] == "ROTATE"){
+    } else if(input_parsed[0] == "ROTATE" && input_val_int==-1){
         output.COMMAND = ROTATE_CCW;
+    } else if(input_parsed[0] == "ROTATE" && input_val_int==1){
+        output.COMMAND = ROTATE_CW;
     } else if(input_parsed[0] == "F_ALIGN"){
         output.COMMAND = FINE_ALIGN;
     } else if(input_parsed[0] == "A_PICKUP"){
@@ -118,7 +120,8 @@ jetsonOutput jetsonComms() {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
     }
- 
+    
+    Serial.println("hello from jestson comms");
     // If function arg exists, overwrite default
     if(input_parsed[1] != NULL){
         output.INPUT_VAL = input_val_int;

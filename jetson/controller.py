@@ -53,6 +53,7 @@ link = SerialLink()
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Action primitives (stubs) – return True when complete
+# TODO: replace with blocking/wait logic or sensor checks
 # ──────────────────────────────────────────────────────────────────────────────
 
 def set_up() -> bool:                       return True  # TODO: camera + joystick checks
@@ -169,7 +170,7 @@ class Controller:
             return
 
         if self.idx >= len(self.fsm):
-            self._advance_phase()
+            print("index error in tick \n")
             return
 
         state = self.fsm[self.idx]
@@ -181,12 +182,12 @@ class Controller:
         if self.phase is not Phase.MANUAL:
             self.prev_phase = self.phase
             self.phase = Phase.MANUAL
-            print("✱ Entered MANUAL mode.  Call raw_tx() to talk to ESP – resume_auto() to return.")
+            print("Entered MANUAL mode.  Call raw_tx() to talk to ESP – resume_auto() to return.")
 
     def resume_auto(self):
         if self.phase is Phase.MANUAL and self.prev_phase is not None:
             self.phase = self.prev_phase
-            print(f"↩ Resumed autonomous {self.phase.name}")
+            print(f"Resumed autonomous {self.phase.name}")
 
     def raw_tx(self, line: str):
         link.raw_tx(line)
