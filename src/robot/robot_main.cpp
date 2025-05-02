@@ -33,6 +33,13 @@ void loop() {
     readIMU(false);
     currentYaw = ypr.yaw;
     jetsonOutput output = jetsonComms();
+
+    Serial.println(previousCommand);
+    Serial.println(output.COMMAND);
+
+    if(output.COMMAND == NO_STATE_DETECTED)return; 
+
+    //rotate: 
     if (previousCommand != output.COMMAND) initialYaw = ypr.yaw;
     switch (output.COMMAND)
     {
@@ -41,9 +48,14 @@ void loop() {
         case ALIGN:
         break;
         case ROTATE_CW:
+        Serial.println(initialYaw);
+        Serial.println(currentYaw);
+        previousCommand = output.COMMAND;
+
         rotate(initialYaw, currentYaw, output.INPUT_VAL);
         break;
         case ROTATE_CCW:
+        Serial.println(initialYaw);
         rotate(initialYaw, currentYaw, output.INPUT_VAL);
         break;
         case FINE_ALIGN:
@@ -70,6 +82,8 @@ void loop() {
         break;
         // default:
     }
+
+
 
     // Update PID at 1Hz
     EVERY_N_MILLIS(1000) {
