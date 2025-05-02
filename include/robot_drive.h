@@ -17,7 +17,8 @@
 #define MAX_TURN 3
 
 void setupDrive();
-void updateSetpoints(double left, double right);
+void updateDriveSetpoints(double left, double right);
+void updateFlywheelSetpoints(double left, double right);
 void updatePIDs();
 
 #endif // ROBOT_DRIVE_H
