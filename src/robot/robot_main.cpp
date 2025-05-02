@@ -47,10 +47,12 @@ void loop() {
         case APPROACH_PICKUP_POSE:
         break;
         case GRAB_BIN:
-        break;
-        case FIXED_BACKUP:
+        grabBin();  
         break;
         case DEPOSIT_BIN:
+        depositBin();  
+        break;
+        case FIXED_BACKUP:
         break;
         case BACKUP:
         break;

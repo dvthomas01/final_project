@@ -1,7 +1,10 @@
 #ifndef ROBOT_DRIVE_H
 #define ROBOT_DRIVE_H
 
+#include "MotorDriver.h"
 #define NUM_MOTORS 4
+
+extern MotorDriver motors[NUM_MOTORS];
 
 // 1 Encoder per side of robot (per set of motors in parallel), no encoders on flywheels
 // This means we only PID control the rear wheels, and the front wheels just echo it

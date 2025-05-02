@@ -119,11 +119,20 @@ void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwi
 }
 
 void grabBin() {
-    double speeds[2] = {driveUpSpeed, driveUpSpeed};
-    
 
+    double flywheelSpeed = 0.5;
+    motors[2].drive(flywheelSpeed);  
+    motors[3].drive(flywheelSpeed); 
+    delay(3000);
+    motors[2].drive(0);
+    motors[3].drive(0);
 }
 
 void depositBin() {
-
+    double flywheelSpeed = 0.5;
+    motors[2].drive(flywheelSpeed);  
+    motors[3].drive(-flywheelSpeed); 
+    delay(3000);
+    motors[2].drive(0);
+    motors[3].drive(0);
 }
