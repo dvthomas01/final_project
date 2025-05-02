@@ -43,22 +43,6 @@ void setWheelVelocities(float robotVelocity, float k){
 
 // Makes robot follow a trajectory
 void followTrajectory(trajectoryMode trajectory) {
-
-/*
-    #ifdef JOYSTICK
-    if (freshWirelessData) {
-        double forward = abs(controllerMessage.joystick1.y) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.y, -1, 1, -MAX_FORWARD, MAX_FORWARD);
-        double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
-        updateSetpoints(forward + turn, forward - turn);
-    }
-    #endif 
-
-    #ifdef CIRCLE
-    robotVelocity = 0.2;
-    k = 1/0.5;
-    setWheelVelocities(robotVelocity, k);
-    #endif 
-    */ 
     if (trajectory == STOP){
         setWheelVelocities(0, 0);
     } 

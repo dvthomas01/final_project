@@ -44,23 +44,86 @@ extern struct euler_t {
     float roll;
  } ypr;
 
+ // External UART Connection declaration
+ extern HardwareSerial mySerial; // Use UART1
 
 jetsonOutput jetsonComms() {
-    jetsonOutput output;
+    // declare output struct
+    jetsonOutput output;    
+    
+    // Read Jetson message from serial
+    String input = mySerial.readStringUntil('\n');
+    input.trim(); // Remove whitespace/newline
+    Serial.println("Received on UART1: " + input); // USB debug
 
-    // Read state and input, echo state
-    if (Serial1.available()) {          // data from Jetson
-        String line = Serial1.readStringUntil('\n');
-        Serial.print  ("RX: "); Serial.println(line);
-        Serial1.print ("ACK ");           // bounce something back
-        Serial1.println(line);            // → Jetson reads "ACK HELLO"
+    if (input == "HELLO") {
+      mySerial.println("ACK HELLO");
 
+      output.COMMAND = NO_STATE_DETECTED;
+      return output;
+    } 
 
-        output.COMMAND = SETUP;
-        return output;
+    // Parse Jetson comma-seperated message
+
+    // Create char array to fill with chars of input
+    char inputChar[input.length()];
+    // copy input chars to inputChar
+    strcpy(inputChar, input.c_str());
+    // get tokens for each part of Jetson msg
+    char* input_command = strtok(inputChar, ",");
+    char* input_funcValChar = strtok(NULL, ",");
+
+    // convert tokens to strings
+    String input_parsed[2];
+    input_parsed[0] = input_command;
+    input_parsed[1] = input_funcValChar;
+
+    // convert function arg to int if it exists
+    int input_val_int;
+    if(input_parsed[1] != NULL) {
+        input_val_int = input_parsed[1].toInt();
     }
-    Serial.println("No Connection");
-    output.COMMAND = NO_STATE_DETECTED;
+
+    // Decode Jetson command from string to enum
+    input_parsed[0].toUpperCase(); // Ensure command is same case
+    if(input_parsed[0] == "SETUP") {
+        output.COMMAND = SETUP;
+    } else if(input_parsed[0] == "ALIGN"){
+        output.COMMAND = ALIGN;
+    } else if(input_parsed[0] == "ROTATE"){
+        output.COMMAND = ROTATE_CCW;
+    } else if(input_parsed[0] == "F_ALIGN"){
+        output.COMMAND = FINE_ALIGN;
+    } else if(input_parsed[0] == "A_PICKUP"){
+        output.COMMAND = APPROACH_PICKUP_POSE;
+    } else if(input_parsed[0] == "G_BIN"){
+        output.COMMAND = GRAB_BIN;
+    } else if(input_parsed[0] == "B_TAG"){
+        output.COMMAND = FIXED_BACKUP;
+    } else if(input_parsed[0] == "D_BIN"){
+        output.COMMAND = DEPOSIT_BIN;
+    } else if(input_parsed[0] == "B_UP"){
+        output.COMMAND = BACKUP;
+    } else if(input_parsed[0] == "S_ALIGN"){
+        output.COMMAND = S_MANEUVER_ALIGN;
+    } else if(input_parsed[0] == "DRIVE_UP_RAMP"){
+        output.COMMAND = DRIVE_UP_RAMP;
+    } else if(input_parsed[0] == "DRIVE_DOWN_RAMP"){
+        output.COMMAND = DRIVE_DOWN_RAMP;
+    } else if(input_parsed[0] == "COLOR_DETECT"){
+        output.COMMAND = COLOR_DETECT_STORE;
+    } else if(input_parsed[0] == "DRIVE_TO_PICKUP"){
+        output.COMMAND = DRIVE_TO_PICKUP;
+    } else {
+        Serial.println("Unknown Command: " + input_parsed[0]);
+        output.COMMAND = NO_STATE_DETECTED;
+    }
+ 
+    // If function arg exists, overwrite default
+    if(input_parsed[1] != NULL){
+        output.INPUT_VAL = input_val_int;
+    }
+
     return output;
 }
 

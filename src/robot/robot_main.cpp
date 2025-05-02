@@ -5,6 +5,8 @@
 #include "robot_motion_control.h"
 #include "RobotFunctions.h"
 
+HardwareSerial mySerial(1); // Use UART1
+
 int previousCommand = 0;
 float currentYaw = 0;
 float initialYaw = 0;
@@ -20,9 +22,11 @@ void setup() {
     setupIMU();
     setupDrive();
     readIMU(false);
-    Serial1.begin(115200, SERIAL_8N1, 17, 18); // RX=17 TX=18 – change if needed
-    Serial.println("ESP32-S3 ready");
 
+    mySerial.begin(115200, SERIAL_8N1, 44, 43); // RX=44, TX=43
+    Serial.begin(115200); // Optional: USB debug output
+    Serial.println("Debug serial ready");
+    mySerial.println("ESP32-S3 UART1 ready");
 }
 
 void loop() {
@@ -64,11 +68,13 @@ void loop() {
         break;
         case DRIVE_TO_PICKUP:
         break;
-        default:
+        // default:
     }
 
     // Update PID at 1Hz
     EVERY_N_MILLIS(1000) {
        updatePIDs();
     }
+
+    delay(10); // Avoid flooding CPU, only run loop every 10 ms
 }
