@@ -1,4 +1,3 @@
-// detect_tape_color.cpp
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -69,12 +68,8 @@ int main() {
                     cv::FONT_HERSHEY_SIMPLEX, 1.0,
                     {0,255,0}, 2);
         cv::imshow("Tape-Color Detector", img);
-
-        // Exit on ESC
         if ((cv::waitKey(1) & 0xFF) == 27) break;
     }
-
-
     pipe.stop();
     cv::destroyAllWindows();
     return 0;
