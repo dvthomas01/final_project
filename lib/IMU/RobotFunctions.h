@@ -1,3 +1,14 @@
+void align(int tag);
 void rotate(float initialYaw, float currentYaw, int dir);
+void fineAlign(int tag, float initialX);
+void approachPickupPose(int tag);
+void grabBin();
+void fixedBackup(int tag);
+void depositBin();
+void backUp();
+void sManeuverAlign(int tag);
+void driveUpRamp();
+void driveDownRamp();
+void driveToPickup(int tag);
 void straightline();
 void straight();
