@@ -3,7 +3,6 @@
 #include <WiFi.h>
 #include "wireless.h"
 
-
 // #define PRINT_CONTROLLER
 #define PRINT_ROBOT
 

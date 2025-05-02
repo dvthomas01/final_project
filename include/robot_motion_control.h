@@ -116,7 +116,8 @@ jetsonOutput jetsonComms();
 // HELPER FUNCTIONS
 
 // Follow the specified trajectory
-void followTrajectory(trajectoryMode Trajectory);
+// void followTrajectory(trajectoryMode Trajectory);
+void followTrajectory();
 
 // Updates Odometry 
 // TODO: Do we need this?
