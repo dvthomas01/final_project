@@ -13,8 +13,8 @@ MotorDriver motors[NUM_MOTORS] = { {A_DIR1, A_PWM1, 0}, {A_DIR2, A_PWM2, 1},
 
 
 // NUM_MOTORS != NUM_ENCODERS, See comment in robot_drive.h
-EncoderVelocity encoders[NUM_ENCODERS] = { {ENCODER3_B_PIN, ENCODER3_A_PIN, CPR_312_RPM, 0.2}, 
-                                         {ENCODER4_B_PIN, ENCODER4_A_PIN, CPR_312_RPM, 0.2},  
+EncoderVelocity encoders[NUM_ENCODERS] = { {ENCODER1_B_PIN, ENCODER1_A_PIN, CPR_312_RPM, 0.2}, 
+                                         {ENCODER2_B_PIN, ENCODER2_A_PIN, CPR_312_RPM, 0.2},  
                                          };
 
 PID pids[NUM_ENCODERS] = { {Kp, Ki, Kd, 0, pidTau, false}, {Kp, Ki, Kd, 0, pidTau, false} };
@@ -37,7 +37,7 @@ void updateSetpoints(double left, double right) {
 }
 
 void updatePIDs() {
-    for (uint8_t i = 0; i < NUM_ENCODERS-2; i++) {
+    for (uint8_t i = 0; i < NUM_ENCODERS; i++) {
         velocities[i] = pow(-1, i) * encoders[i].getVelocity();
         controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
         motors[i+2].drive(controlEfforts[i]);
