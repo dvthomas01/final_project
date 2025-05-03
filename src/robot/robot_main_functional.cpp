@@ -95,6 +95,7 @@
      readIMU(false);
  
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
+     mySerial.setTimeout(10);  // 10 ms timeout
      Serial.begin(115200);                      // USB debug
      Serial.println("ESP32‑S3 ready");
  }
