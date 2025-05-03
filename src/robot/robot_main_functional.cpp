@@ -125,7 +125,7 @@
              break;
      }
  
-     EVERY_N_MILLIS(1000) { updatePIDs(); }
+     EVERY_N_MILLIS(5) { updatePIDs(); }
      delay(10);   // relieve the watchdog
  }
  
