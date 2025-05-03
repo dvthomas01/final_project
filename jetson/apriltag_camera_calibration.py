@@ -31,7 +31,7 @@ def main():
     objp *= square_size
 
     # Open the default camera (device index 0)
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(3 ,cv2.CAP_DSHOW)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
@@ -105,7 +105,7 @@ def main():
 
                 # Optionally, save to a file for later use
                 np.savez(
-                    "camera_calibration_live.npz",
+                    "camera_calibration_live_back.npz",
                     camera_matrix=camera_matrix,
                     dist_coeffs=dist_coeffs,
                     rvecs=rvecs,
