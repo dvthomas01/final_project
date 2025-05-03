@@ -86,13 +86,18 @@ jetsonOutput jetsonComms() {
 
     // Decode Jetson command from string to enum
     input_parsed[0].toUpperCase(); // Ensure command is same case
+    Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ");
+    Serial.println(input_parsed[1]);
+    Serial.println(input_funcValChar);
     if(input_parsed[0] == "SETUP") {
         output.COMMAND = SETUP;
     } else if(input_parsed[0] == "ALIGN"){
         output.COMMAND = ALIGN;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==-1){
+        Serial.println("CCW TRIPPED");
         output.COMMAND = ROTATE_CCW;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==1){
+        Serial.println("CW TRIPPED");
         output.COMMAND = ROTATE_CW;
     } else if(input_parsed[0] == "F_ALIGN"){
         output.COMMAND = FINE_ALIGN;
@@ -138,12 +143,11 @@ void straightline() {
 }*/
 
 
-
 void rotate(float initialYaw, float currentYaw, int dir)
 /* dir =  1  → clockwise  (ROTATE_CW)
  * dir = -1  → counter‑clockwise (ROTATE_CCW)
- * Turns ~90 ° then prints "ROTATE_DONE"
- */
+ * Turns ~90 ° then prints "ROTATE_DONE"*/
+ 
 {   Serial.println("rotate");
     Serial.println(initialYaw);
     Serial.println(currentYaw);
@@ -157,7 +161,6 @@ void rotate(float initialYaw, float currentYaw, int dir)
     // 2.  If we’re within ±5 ° of 90 °, stop and acknowledge
     if (diff >= 85.0) {
         updateDriveSetpoints(0, 0);                // brakes on both wheels
-        // updatePIDs();
         mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this
         Serial.println("Rotation Finished \n");
         return;                               // no further motor commands
@@ -171,8 +174,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
     Serial.println();
 
     updateDriveSetpoints(left, right);
-    // updatePIDs();
-    return;
+    //return;
 }
 
 /*void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
@@ -219,7 +221,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
         Serial.println("Hi3");
     }    
     Serial.println(left);
-    updateSetpoints(left, right);
+    updateDriveSetpoints(left, right);
     updatePIDs();
 }*/
 
@@ -230,6 +232,11 @@ void driveStraight(int dir) {
 
     // Update drive setpoints
     updateDriveSetpoints(driveSpeed, driveSpeed);
+    updatePIDs();
+    delay(1000);
+    updateDriveSetpoints(0,0);
+    updatePIDs();
+    
 }
 
 void grabBin() {
