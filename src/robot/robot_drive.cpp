@@ -20,7 +20,7 @@ EncoderVelocity encoders[NUM_ENCODERS] = { {ENCODER1_B_PIN, ENCODER1_A_PIN, CPR_
 PID pids[NUM_ENCODERS] = { {Kp, Ki, Kd, 0, pidTau, false}, {Kp, Ki, Kd, 0, pidTau, false} };
 
 
-double setpoints[NUM_ENCODERS] = {0, 0};
+double setpoints[NUM_MOTORS] = {0, 0, 0, 0};
 double velocities[NUM_ENCODERS] = {0, 0};
 double controlEfforts[NUM_ENCODERS] = {0, 0};
 
@@ -39,18 +39,18 @@ void updateDriveSetpoints(double left, double right) {
 }
 
 void updateFlywheelSetpoints(double left, double right) {
-    setpoints[0] = left; //left flywheel
-    setpoints[1] = right; //right flywheel
+    setpoints[2] = left; //left flywheel
+    setpoints[3] = right; //right flywheel
     // setpoints[2] = setpoints[2]; //drive
     // setpoints[3] = setpoints[3]; //drive
 }
 
 void updatePIDs() {
     for (uint8_t i = 0; i < NUM_MOTORS; i++) {
-        // Drive motors: 2 & 3
-        // Flywheels: 0 & 1
+        // Drive motors: 1 & 2
+        // Flywheels: 3 & 4
         // There are only encoders for 2 & 3
-        if (i > 1) {
+        if (i < 2) {
             velocities[i] = pow(-1, i) * encoders[i].getVelocity();
             controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
         } else {
