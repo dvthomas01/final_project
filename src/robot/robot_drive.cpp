@@ -33,6 +33,7 @@ void setupDrive()
 void updateDriveSetpoints(double left, double right) {
     setpoints[0] = left; // setpoints[0]; //left flywheel
     setpoints[1] = right; //setpoints[1]; //right flywheel
+    Serial.print(left); Serial.print(" "); Serial.println(right);
   //  setpoints[2] = left; //drive
   //  setpoints[3] = right; //drive
 }

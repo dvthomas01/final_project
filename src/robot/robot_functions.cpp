@@ -149,13 +149,17 @@ void rotate(float initialYaw, float currentYaw, int dir)
     Serial.println(currentYaw);
     // 1.  How much have we turned so far?
     float diff = fabsf(currentYaw - initialYaw);
-    if (diff > 180) diff = 360.0 - diff;     // handle wrap‑around
-
+    Serial.println(diff);
+    if (diff > 180) {
+        diff = 360.0 - diff;     // handle wrap‑around
+        Serial.println("Wrap-around");
+    }
     // 2.  If we’re within ±5 ° of 90 °, stop and acknowledge
     if (diff >= 85.0) {
         updateDriveSetpoints(0, 0);                // brakes on both wheels
-        updatePIDs();
+        // updatePIDs();
         mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this
+        Serial.println("Rotation Finished \n");
         return;                               // no further motor commands
     }
 
@@ -164,9 +168,11 @@ void rotate(float initialYaw, float currentYaw, int dir)
     double left  =  SPEED * dir;              // CW:  +0.75  CCW: –0.75
     double right = -left;                     // opposite wheel
     Serial.println(left);
+    Serial.println();
 
     updateDriveSetpoints(left, right);
-    updatePIDs();
+    // updatePIDs();
+    return;
 }
 
 /*void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
