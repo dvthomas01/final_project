@@ -4,7 +4,7 @@ from common import BAUD, PORT, MSG_TERMINATOR
 
 class SerialLink:
     def __init__(self, port: str = PORT, baud: int = BAUD):
-        self._ser = serial.Serial(port, baud, timeout=0.05)
+        self._ser = serial.Serial(port, baud, timeout=0)
         self._tx_q: deque[str] = deque()
 
     # ------------ public -------------
