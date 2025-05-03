@@ -49,7 +49,6 @@ class Controller:
 
         print("Step 3 time:")
         print(time.monotonic() - t0)
-        t0 = time.monotonic()
 
     # ------------- helpers ------------
     def _interpret(self, replies: list[str]) -> Event | None:

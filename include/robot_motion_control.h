@@ -33,6 +33,7 @@ enum commands {
     COLOR_DETECT_STORE,
     DRIVE_TO_PICKUP,
     FINISH,
+    STOP,
     NO_STATE_DETECTED
 };
 

@@ -58,17 +58,23 @@
  static void executeCommand() {
      switch (ctx.cmd) {
          case ROTATE_CCW:
+            Serial.println("CCW Running");
+            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             break;
          case ROTATE_CW:
             Serial.println("CW Running");
-            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            grabBin();
             break;
          /* TODO: plug in other command handlers here */
          case APPROACH_PICKUP_POSE: 
             driveStraight(1);
             break;
+         case STOP:
+            updateDriveSetpoints(0, 0);
+            break;
          default:
-             break;
+            break;
      }
  }
  

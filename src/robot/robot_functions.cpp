@@ -123,6 +123,8 @@ jetsonOutput jetsonComms() {
         output.COMMAND = DRIVE_TO_PICKUP;
     } else if(input_parsed[0] == "FINISH") {
         output.COMMAND = FINISH; 
+    } else if(input_parsed[0] == "STOP") {
+        output.COMMAND = STOP;    
     } else {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
@@ -241,10 +243,10 @@ void driveStraight(int dir) {
 
 void grabBin() {
     double speeds[2] = {driveUpSpeed, driveUpSpeed};
-    
+    updateFlywheelSetpoints(speeds[0], speeds[1]);
 
 }
 
 void depositBin() {
-
+    //
 }
