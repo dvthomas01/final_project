@@ -21,6 +21,7 @@ class Command(str, Enum):
     COLOR_DETECT = "COLOR_DETECT"
     DRIVE_TO_PICKUP = "DRIVE_TO_PICKUP"
     FINISH = "FINISH"
+    # STOP = "STOP"
     # leave out the ramp commands for now
 
 class Phase(Enum):

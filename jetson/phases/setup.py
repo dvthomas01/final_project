@@ -48,7 +48,7 @@ class Setup:
             return None
         
         if self._step == 2 and event:
-            if time.monotonic() - self._t0 >= self._duration:
+            if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
             self._sent = True
             return Phase.FINISH     

@@ -57,16 +57,25 @@
  
  static void executeCommand() {
      switch (ctx.cmd) {
-         case ROTATE_CW:
          case ROTATE_CCW:
-             rotate(ctx.yaw0, ypr.yaw, ctx.arg);
-             break;
+            Serial.println("CCW Running");
+            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            break;
+         case ROTATE_CW:
+            Serial.println("CW Running");
+            // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            // grabBin();
+            driveStraight(1);
+            break;
          /* TODO: plug in other command handlers here */
          case APPROACH_PICKUP_POSE: 
             driveStraight(1);
             break;
+         case STOP:
+            updateDriveSetpoints(0, 0);
+            break;
          default:
-             break;
+            break;
      }
  }
  
@@ -74,11 +83,11 @@
      // Currently the only long‑running command is ROTATE_*, which tells us it’s
      // done by printing "ROTATE_DONE" on USB Serial.
      if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
-        String line = Serial.readStringUntil('\n');
+        String line = mySerial.readStringUntil('\n');
         return line.indexOf("ROTATE_DONE") >= 0;
      }
      if (ctx.cmd == APPROACH_PICKUP_POSE) {
-        String line = Serial.readStringUntil('\n');
+        String line = mySerial.readStringUntil('\n');
         return line.indexOf("STOP") >=0; 
      }
      return false;
@@ -93,6 +102,7 @@
      readIMU(false);
  
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
+     mySerial.setTimeout(10);  // 10 ms timeout
      Serial.begin(115200);                      // USB debug
      Serial.println("ESP32‑S3 ready");
  }

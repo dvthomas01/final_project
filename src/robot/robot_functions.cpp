@@ -33,6 +33,7 @@ float alignSpeed = 1;
 // Box Collection Variables
 float distToPickUp = 46382537298543432; // MEASURE
 float driveUpSpeed = 1;
+double flywheelSpeed = 0.5;
 
 // Box Drop Off Variables
 float distToDropOff = 35854392574232102; // MEASURE
@@ -86,13 +87,18 @@ jetsonOutput jetsonComms() {
 
     // Decode Jetson command from string to enum
     input_parsed[0].toUpperCase(); // Ensure command is same case
+    Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ");
+    Serial.println(input_parsed[1]);
+    Serial.println(input_funcValChar);
     if(input_parsed[0] == "SETUP") {
         output.COMMAND = SETUP;
     } else if(input_parsed[0] == "ALIGN"){
         output.COMMAND = ALIGN;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==-1){
+        Serial.println("CCW TRIPPED");
         output.COMMAND = ROTATE_CCW;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==1){
+        Serial.println("CW TRIPPED");
         output.COMMAND = ROTATE_CW;
     } else if(input_parsed[0] == "F_ALIGN"){
         output.COMMAND = FINE_ALIGN;
@@ -124,6 +130,7 @@ jetsonOutput jetsonComms() {
     }
     
     Serial.println("hello from jestson comms");
+    Serial.print(input_parsed[0]); Serial.println(input_parsed[1]);
     // If function arg exists, overwrite default
     if(input_parsed[1] != NULL){
         output.INPUT_VAL = input_val_int;
@@ -138,24 +145,26 @@ void straightline() {
 }*/
 
 
-
 void rotate(float initialYaw, float currentYaw, int dir)
 /* dir =  1  → clockwise  (ROTATE_CW)
  * dir = -1  → counter‑clockwise (ROTATE_CCW)
- * Turns ~90 ° then prints "ROTATE_DONE"
- */
+ * Turns ~90 ° then prints "ROTATE_DONE"*/
+ 
 {   Serial.println("rotate");
     Serial.println(initialYaw);
     Serial.println(currentYaw);
     // 1.  How much have we turned so far?
     float diff = fabsf(currentYaw - initialYaw);
-    if (diff > 180) diff = 360.0 - diff;     // handle wrap‑around
-
+    Serial.println(diff);
+    if (diff > 180) {
+        diff = 360.0 - diff;     // handle wrap‑around
+        Serial.println("Wrap-around");
+    }
     // 2.  If we’re within ±5 ° of 90 °, stop and acknowledge
     if (diff >= 85.0) {
         updateDriveSetpoints(0, 0);                // brakes on both wheels
-        updatePIDs();
         mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this
+        Serial.println("Rotation Finished \n");
         return;                               // no further motor commands
     }
 
@@ -164,9 +173,10 @@ void rotate(float initialYaw, float currentYaw, int dir)
     double left  =  SPEED * dir;              // CW:  +0.75  CCW: –0.75
     double right = -left;                     // opposite wheel
     Serial.println(left);
+    Serial.println();
 
     updateDriveSetpoints(left, right);
-    updatePIDs();
+    //return;
 }
 
 /*void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
@@ -213,7 +223,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
         Serial.println("Hi3");
     }    
     Serial.println(left);
-    updateSetpoints(left, right);
+    updateDriveSetpoints(left, right);
     updatePIDs();
 }*/
 
@@ -224,14 +234,22 @@ void driveStraight(int dir) {
 
     // Update drive setpoints
     updateDriveSetpoints(driveSpeed, driveSpeed);
+    updatePIDs();
+    delay(1000);
+    updateDriveSetpoints(0,0);
+    updatePIDs();
+    
 }
 
 void grabBin() {
-    double speeds[2] = {driveUpSpeed, driveUpSpeed};
-    
+    // Speed > 0 is for deposit
+    double speeds[2] = {-flywheelSpeed, -flywheelSpeed};
+    updateFlywheelSetpoints(speeds[0], speeds[1]);
 
 }
 
 void depositBin() {
-
+    // Speed > 0 is for deposit
+    double speeds[2] = {flywheelSpeed, flywheelSpeed};
+    updateFlywheelSetpoints(speeds[0], speeds[1]);
 }

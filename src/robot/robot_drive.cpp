@@ -20,9 +20,9 @@ EncoderVelocity encoders[NUM_ENCODERS] = { {ENCODER1_B_PIN, ENCODER1_A_PIN, CPR_
 PID pids[NUM_ENCODERS] = { {Kp, Ki, Kd, 0, pidTau, false}, {Kp, Ki, Kd, 0, pidTau, false} };
 
 
-double setpoints[NUM_ENCODERS] = {0, 0};
+double setpoints[NUM_MOTORS] = {0, 0, 0, 0};
 double velocities[NUM_ENCODERS] = {0, 0};
-double controlEfforts[NUM_ENCODERS] = {0, 0};
+double controlEfforts[NUM_MOTORS] = {0, 0, 0, 0};
 
 void setupDrive() 
 {
@@ -31,23 +31,32 @@ void setupDrive()
 }
 
 void updateDriveSetpoints(double left, double right) {
-    setpoints[0] = left; // setpoints[0]; //left flywheel
-    setpoints[1] = right; //setpoints[1]; //right flywheel
-  //  setpoints[2] = left; //drive
-  //  setpoints[3] = right; //drive
+    setpoints[2] = left; // setpoints[0]; //left flywheel
+    setpoints[3] = right; //setpoints[1]; //right flywheel
+    // Serial.print(left); Serial.print(" "); Serial.println(right);
+//    setpoints[2] = left; //drive
+//    setpoints[3] = right; //drive
 }
 
 void updateFlywheelSetpoints(double left, double right) {
     setpoints[0] = left; //left flywheel
     setpoints[1] = right; //right flywheel
-    setpoints[2] = setpoints[2]; //drive
-    setpoints[3] = setpoints[3]; //drive
+    // setpoints[2] = setpoints[2]; //drive
+    // setpoints[3] = setpoints[3]; //drive
 }
 
 void updatePIDs() {
-    for (uint8_t i = 0; i < NUM_ENCODERS; i++) {
-        velocities[i] = pow(-1, i) * encoders[i].getVelocity();
-        controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
-        motors[i+2].drive(controlEfforts[i]);
+    for (uint8_t i = 0; i < NUM_MOTORS; i++) {
+        // Drive motors: 2 & 3
+        // Flywheels: 0 & 1
+        // There are only encoders for 2 & 3
+        if (i > 1) {
+            velocities[i - 2] = pow(-1, i - 2) * encoders[i - 2].getVelocity();
+            controlEfforts[i] = pids[   i - 2].calculateParallel(velocities[i - 2], setpoints[i]);
+        } else {
+            controlEfforts[i] = setpoints[i];
+        }
+
+        motors[i].drive(controlEfforts[i]);
     }
 }
