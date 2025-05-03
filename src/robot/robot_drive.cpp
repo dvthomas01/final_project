@@ -22,7 +22,7 @@ PID pids[NUM_ENCODERS] = { {Kp, Ki, Kd, 0, pidTau, false}, {Kp, Ki, Kd, 0, pidTa
 
 double setpoints[NUM_MOTORS] = {0, 0, 0, 0};
 double velocities[NUM_ENCODERS] = {0, 0};
-double controlEfforts[NUM_ENCODERS] = {0, 0};
+double controlEfforts[NUM_MOTORS] = {0, 0, 0, 0};
 
 void setupDrive() 
 {
@@ -31,26 +31,26 @@ void setupDrive()
 }
 
 void updateDriveSetpoints(double left, double right) {
-    setpoints[0] = left; // setpoints[0]; //left flywheel
-    setpoints[1] = right; //setpoints[1]; //right flywheel
+    setpoints[2] = left; // setpoints[0]; //left flywheel
+    setpoints[3] = right; //setpoints[1]; //right flywheel
     // Serial.print(left); Serial.print(" "); Serial.println(right);
 //    setpoints[2] = left; //drive
 //    setpoints[3] = right; //drive
 }
 
 void updateFlywheelSetpoints(double left, double right) {
-    setpoints[2] = left; //left flywheel
-    setpoints[3] = right; //right flywheel
+    setpoints[0] = left; //left flywheel
+    setpoints[1] = right; //right flywheel
     // setpoints[2] = setpoints[2]; //drive
     // setpoints[3] = setpoints[3]; //drive
 }
 
 void updatePIDs() {
     for (uint8_t i = 0; i < NUM_MOTORS; i++) {
-        // Drive motors: 1 & 2
-        // Flywheels: 3 & 4
+        // Drive motors: 2 & 3
+        // Flywheels: 0 & 1
         // There are only encoders for 2 & 3
-        if (i < 2) {
+        if (i > 1) {
             velocities[i] = pow(-1, i) * encoders[i].getVelocity();
             controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
         } else {
