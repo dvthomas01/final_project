@@ -124,7 +124,7 @@ jetsonOutput jetsonComms() {
     } else if(input_parsed[0] == "FINISH") {
         output.COMMAND = FINISH; 
     } else if(input_parsed[0] == "STOP") {
-        output.COMMAND = STOP;    
+        output.COMMAND = STOP_COMMAND;    
     } else {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
