@@ -32,6 +32,9 @@ class Controller:
 
         # 3. Let the current phase advance
         nxt = self._impl.tick(event)
+        if nxt == Phase.FINISH:
+              self._phase = nxt
+              return  # Do not try to create another _impl
         if nxt:
             self._phase = nxt
             self._impl = PHASE_IMPLS[nxt](self._link)
@@ -48,3 +51,8 @@ class Controller:
                 return Event("ROTATE_DONE")
             #TODO: add more
         return None
+        
+    @property
+    def phase(self) -> Phase:
+        return self._phase
+    
