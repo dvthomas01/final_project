@@ -9,6 +9,7 @@ try:
     while ctrl.phase is not Phase.FINISH:      
         t0 = time.monotonic()
         ctrl.tick()
+        print(Controller.PERIOD - (time.monotonic() - t0))
         time.sleep(max(0, Controller.PERIOD - (time.monotonic() - t0)))
 except KeyboardInterrupt:
     pass
