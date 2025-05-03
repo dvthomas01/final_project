@@ -131,6 +131,7 @@ jetsonOutput jetsonComms() {
     }
     
     Serial.println("hello from jestson comms");
+    Serial.print(input_parsed[0]); Serial.println(input_parsed[1]);
     // If function arg exists, overwrite default
     if(input_parsed[1] != NULL){
         output.INPUT_VAL = input_val_int;
