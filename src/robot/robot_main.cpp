@@ -53,6 +53,7 @@ void loop() {
         previousCommand = output.COMMAND;
 
         rotate(initialYaw, currentYaw, output.INPUT_VAL);
+        
         break;
         case ROTATE_CCW:
         Serial.println(initialYaw);

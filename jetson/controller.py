@@ -1,16 +1,16 @@
 import time
 from common import Phase, Event #Phase: larger state machine, Event: feedback from sensor or esp
 from link import SerialLink #UART Wrapper
-from phases import  acquire_bin, setup, transport_bin, drop_bin, return_home
+from phases import  acquire_bin, setup#, transport_bin, drop_bin, return_home
 
 
 #Dictionary where the key is a Phase enum value and the value is the class that runs that phase.
 PHASE_IMPLS = {
     Phase.SETUP:        setup.Setup,
     Phase.ACQUIRE_BIN:  acquire_bin.AcquireBin,
-    Phase.TRANSPORT_BIN: transport_bin.TransportBin,
-    Phase.DROP_BIN:     drop_bin.DropBin,
-    Phase.RETURN_HOME:  return_home.ReturnHome,
+    #Phase.TRANSPORT_BIN: transport_bin.TransportBin,
+    #Phase.DROP_BIN:     drop_bin.DropBin,
+    #Phase.RETURN_HOME:  return_home.ReturnHome,
 }
 
 class Controller:
@@ -44,5 +44,7 @@ class Controller:
                 return Event("ESP_READY")
             if line == "ALIGNED":
                 return Event("ALIGNED")
-            # …add more
+            if line == "ROTATE_DONE":
+                return Event("ROTATE_DONE")
+            #TODO: add more
         return None

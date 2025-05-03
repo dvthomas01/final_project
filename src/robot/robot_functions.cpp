@@ -129,14 +129,41 @@ jetsonOutput jetsonComms() {
 
     return output;
 }
-
+/*
 void straightline() {
     trajectoryMode trajectory = FORWARD;
     followTrajectory(trajectory);
+}*/
+
+
+
+void rotate(float initialYaw, float currentYaw, int dir)
+/* dir =  1  → clockwise  (ROTATE_CW)
+ * dir = -1  → counter‑clockwise (ROTATE_CCW)
+ * Turns ~90 ° then prints "ROTATE_DONE"
+ */
+{
+    // 1.  How much have we turned so far?
+    float diff = fabsf(currentYaw - initialYaw);
+    if (diff > 180) diff = 360.0f - diff;     // handle wrap‑around
+
+    // 2.  If we’re within ±5 ° of 90 °, stop and acknowledge
+    if (diff >= 85.0f) {
+        updateDriveSetpoints(0, 0);                // brakes on both wheels
+        updatePIDs();
+        mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this
+        return;                               // no further motor commands
+    }
+
+    // 3.  Otherwise keep spinning
+    const float SPEED = 0.75f;                // tweak to taste
+    double left  =  SPEED * dir;              // CW:  +0.75  CCW: –0.75
+    double right = -left;                     // opposite wheel
+    updateDriveSetpoints(left, right);
+    updatePIDs();
 }
 
-
-void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
+/*void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
     double left = 0;
     double right = 0;    
     
@@ -182,7 +209,7 @@ void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwi
     Serial.println(left);
     updateSetpoints(left, right);
     updatePIDs();
-}
+}*/
 
 void grabBin() {
     double speeds[2] = {driveUpSpeed, driveUpSpeed};

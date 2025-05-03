@@ -1,12 +1,16 @@
 from controller import Controller
+from common import Phase
 import time
 
 ctrl = Controller()
-print("Jetson FSM running, Ctrl‑C to quit")
+print("Jetson FSM running – Ctrl‑C to quit")
+
 try:
-    while True:
-        start = time.monotonic()
+    while ctrl.phase is not Phase.FINISH:      
+        t0 = time.monotonic()
         ctrl.tick()
-        time.sleep(max(0, Controller.PERIOD - (time.monotonic() - start)))
+        time.sleep(max(0, Controller.PERIOD - (time.monotonic() - t0)))
 except KeyboardInterrupt:
-    print("Bye")
+    pass
+
+print("Finished single rotation; shutting down.")

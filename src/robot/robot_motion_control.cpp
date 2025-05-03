@@ -38,7 +38,7 @@ double prevTheta = ypr.yaw;
 void setWheelVelocities(float robotVelocity, float k){
     double left = (robotVelocity - k*b*robotVelocity)/r;
     double right = 2*robotVelocity/r  - left;
-    updateSetpoints(left, right);
+    updateDriveSetpoints(left, right);
 }
 
 // Makes robot follow a trajectory
