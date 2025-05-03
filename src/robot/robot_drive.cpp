@@ -33,22 +33,30 @@ void setupDrive()
 void updateDriveSetpoints(double left, double right) {
     setpoints[0] = left; // setpoints[0]; //left flywheel
     setpoints[1] = right; //setpoints[1]; //right flywheel
-    Serial.print(left); Serial.print(" "); Serial.println(right);
-  //  setpoints[2] = left; //drive
-  //  setpoints[3] = right; //drive
+    // Serial.print(left); Serial.print(" "); Serial.println(right);
+//    setpoints[2] = left; //drive
+//    setpoints[3] = right; //drive
 }
 
 void updateFlywheelSetpoints(double left, double right) {
     setpoints[0] = left; //left flywheel
     setpoints[1] = right; //right flywheel
-    setpoints[2] = setpoints[2]; //drive
-    setpoints[3] = setpoints[3]; //drive
+    // setpoints[2] = setpoints[2]; //drive
+    // setpoints[3] = setpoints[3]; //drive
 }
 
 void updatePIDs() {
-    for (uint8_t i = 0; i < NUM_ENCODERS; i++) {
-        velocities[i] = pow(-1, i) * encoders[i].getVelocity();
-        controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
-        motors[i+2].drive(controlEfforts[i]);
+    for (uint8_t i = 0; i < NUM_MOTORS; i++) {
+        // Drive motors: 2 & 3
+        // Flywheels: 0 & 1
+        // There are only encoders for 2 & 3
+        if (i > 1) {
+            velocities[i] = pow(-1, i) * encoders[i].getVelocity();
+            controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
+        } else {
+            controlEfforts[i] = setpoints[i];
+        }
+
+        motors[i].drive(controlEfforts[i]);
     }
 }
