@@ -63,8 +63,9 @@
             break;
          case ROTATE_CW:
             Serial.println("CW Running");
-            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             // grabBin();
+            driveStraight(1);
             break;
          /* TODO: plug in other command handlers here */
          case APPROACH_PICKUP_POSE: 
