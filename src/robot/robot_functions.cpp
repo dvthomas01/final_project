@@ -241,11 +241,14 @@ void driveStraight(int dir) {
 }
 
 void grabBin() {
-    double speeds[2] = {driveUpSpeed, driveUpSpeed};
+    // Speed > 0 is for deposit
+    double speeds[2] = {-driveUpSpeed, -driveUpSpeed};
     updateFlywheelSetpoints(speeds[0], speeds[1]);
 
 }
 
 void depositBin() {
-    //
+    // Speed > 0 is for deposit
+    double speeds[2] = {driveUpSpeed, driveUpSpeed};
+    updateFlywheelSetpoints(speeds[0], speeds[1]);
 }
