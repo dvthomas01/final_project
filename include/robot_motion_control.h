@@ -53,7 +53,7 @@ struct jetsonOutput {
 
 // Command robot to rotate 90 degrees CW or CCW
 // 1 = CW, -1 = CCW
-void rotate(int dir);
+void rotate(float initialYaw, float currentYaw, int dir);
 
 // Draw bin into center cavity
 // If limit switch activated, (async) sets motors to brake
