@@ -218,8 +218,11 @@ void rotate(float initialYaw, float currentYaw, int dir)
 }*/
 
 void driveStraight(int dir) {
-    double driveSpeed = MAX_FORWARD/2;
+    Serial.println("driveStraight");
+    double driveSpeed = .75;
     driveSpeed *= dir; // If driving backwards, flip drive vel
+
+    // Update drive setpoints
     updateDriveSetpoints(driveSpeed, driveSpeed);
 }
 

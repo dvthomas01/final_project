@@ -13,7 +13,7 @@ enum trajectoryMode {
     BACKWARD,
     CW,
     CCW
-};
+};  
 
 // Define enum of commands for JetsonComms
 enum commands {
@@ -54,6 +54,11 @@ struct jetsonOutput {
 // Command robot to rotate 90 degrees CW or CCW
 // 1 = CW, -1 = CCW
 void rotate(float initialYaw, float currentYaw, int dir);
+
+// Drive in straight line 
+// 1 = Forward
+// -1 = Backward
+void driveStraight(int dir);
 
 // Draw bin into center cavity
 // If limit switch activated, (async) sets motors to brake
