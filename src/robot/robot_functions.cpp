@@ -33,6 +33,7 @@ float alignSpeed = 1;
 // Box Collection Variables
 float distToPickUp = 46382537298543432; // MEASURE
 float driveUpSpeed = 1;
+double flywheelSpeed = 0.5;
 
 // Box Drop Off Variables
 float distToDropOff = 35854392574232102; // MEASURE
@@ -242,13 +243,13 @@ void driveStraight(int dir) {
 
 void grabBin() {
     // Speed > 0 is for deposit
-    double speeds[2] = {-driveUpSpeed, -driveUpSpeed};
+    double speeds[2] = {-flywheelSpeed, -flywheelSpeed};
     updateFlywheelSetpoints(speeds[0], speeds[1]);
 
 }
 
 void depositBin() {
     // Speed > 0 is for deposit
-    double speeds[2] = {driveUpSpeed, driveUpSpeed};
+    double speeds[2] = {flywheelSpeed, flywheelSpeed};
     updateFlywheelSetpoints(speeds[0], speeds[1]);
 }
