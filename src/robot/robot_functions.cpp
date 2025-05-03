@@ -217,6 +217,12 @@ void rotate(float initialYaw, float currentYaw, int dir)
     updatePIDs();
 }*/
 
+void driveStraight(int dir) {
+    double driveSpeed = MAX_FORWARD/2;
+    driveSpeed *= dir; // If driving backwards, flip drive vel
+    updateDriveSetpoints(driveSpeed, driveSpeed);
+}
+
 void grabBin() {
     double speeds[2] = {driveUpSpeed, driveUpSpeed};
     

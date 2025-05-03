@@ -62,6 +62,9 @@
              rotate(ctx.yaw0, ypr.yaw, ctx.arg);
              break;
          /* TODO: plug in other command handlers here */
+         case APPROACH_PICKUP_POSE: 
+            driveStraight(1);
+            break;
          default:
              break;
      }
@@ -71,10 +74,12 @@
      // Currently the only long‑running command is ROTATE_*, which tells us it’s
      // done by printing "ROTATE_DONE" on USB Serial.
      if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
-         if (Serial.available()) {
-             String line = Serial.readStringUntil('\n');
-             return line.indexOf("ROTATE_DONE") >= 0;
-         }
+        String line = Serial.readStringUntil('\n');
+        return line.indexOf("ROTATE_DONE") >= 0;
+     }
+     if (ctx.cmd == APPROACH_PICKUP_POSE) {
+        String line = Serial.readStringUntil('\n');
+        return line.indexOf("STOP") >=0; 
      }
      return false;
  }
