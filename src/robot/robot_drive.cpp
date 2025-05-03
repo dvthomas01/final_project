@@ -51,8 +51,8 @@ void updatePIDs() {
         // Flywheels: 0 & 1
         // There are only encoders for 2 & 3
         if (i > 1) {
-            velocities[i] = pow(-1, i) * encoders[i].getVelocity();
-            controlEfforts[i] = pids[i].calculateParallel(velocities[i], setpoints[i]);
+            velocities[i - 2] = pow(-1, i - 2) * encoders[i - 2].getVelocity();
+            controlEfforts[i] = pids[i - 2].calculateParallel(velocities[i - 2], setpoints[i]);
         } else {
             controlEfforts[i] = setpoints[i];
         }
