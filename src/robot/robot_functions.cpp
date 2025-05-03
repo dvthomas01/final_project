@@ -116,6 +116,8 @@ jetsonOutput jetsonComms() {
         output.COMMAND = COLOR_DETECT_STORE;
     } else if(input_parsed[0] == "DRIVE_TO_PICKUP"){
         output.COMMAND = DRIVE_TO_PICKUP;
+    } else if(input_parsed[0] == "FINISH") {
+        output.COMMAND = FINISH; 
     } else {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
@@ -142,13 +144,15 @@ void rotate(float initialYaw, float currentYaw, int dir)
  * dir = -1  → counter‑clockwise (ROTATE_CCW)
  * Turns ~90 ° then prints "ROTATE_DONE"
  */
-{
+{   Serial.println("rotate");
+    Serial.println(initialYaw);
+    Serial.println(currentYaw);
     // 1.  How much have we turned so far?
     float diff = fabsf(currentYaw - initialYaw);
-    if (diff > 180) diff = 360.0f - diff;     // handle wrap‑around
+    if (diff > 180) diff = 360.0 - diff;     // handle wrap‑around
 
     // 2.  If we’re within ±5 ° of 90 °, stop and acknowledge
-    if (diff >= 85.0f) {
+    if (diff >= 85.0) {
         updateDriveSetpoints(0, 0);                // brakes on both wheels
         updatePIDs();
         mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this
@@ -156,9 +160,11 @@ void rotate(float initialYaw, float currentYaw, int dir)
     }
 
     // 3.  Otherwise keep spinning
-    const float SPEED = 0.75f;                // tweak to taste
+    const float SPEED = 0.75;                // tweak to taste
     double left  =  SPEED * dir;              // CW:  +0.75  CCW: –0.75
     double right = -left;                     // opposite wheel
+    Serial.println(left);
+
     updateDriveSetpoints(left, right);
     updatePIDs();
 }

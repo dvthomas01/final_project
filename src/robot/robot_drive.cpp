@@ -31,10 +31,10 @@ void setupDrive()
 }
 
 void updateDriveSetpoints(double left, double right) {
-    setpoints[0] = setpoints[0]; //left flywheel
-    setpoints[1] = setpoints[1]; //right flywheel
-    setpoints[2] = left; //drive
-    setpoints[3] = right; //drive
+    setpoints[0] = left; // setpoints[0]; //left flywheel
+    setpoints[1] = right; //setpoints[1]; //right flywheel
+  //  setpoints[2] = left; //drive
+  //  setpoints[3] = right; //drive
 }
 
 void updateFlywheelSetpoints(double left, double right) {

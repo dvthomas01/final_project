@@ -32,6 +32,7 @@ enum commands {
     DRIVE_DOWN_RAMP,
     COLOR_DETECT_STORE,
     DRIVE_TO_PICKUP,
+    FINISH,
     NO_STATE_DETECTED
 };
 

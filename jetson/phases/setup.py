@@ -35,6 +35,8 @@ class Setup:
 
         # Wait for ESP‑32 to acknowledge completion
         if event and event.name == "ROTATE_DONE":
+            self._link.enqueue(Command.FINISH.value) 
+            self._sent = True
             return Phase.FINISH
 
         return None

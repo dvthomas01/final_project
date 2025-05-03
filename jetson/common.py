@@ -20,6 +20,7 @@ class Command(str, Enum):
     S_ALIGN = "S_ALIGN"
     COLOR_DETECT = "COLOR_DETECT"
     DRIVE_TO_PICKUP = "DRIVE_TO_PICKUP"
+    FINISH = "FINISH"
     # leave out the ramp commands for now
 
 class Phase(Enum):

@@ -40,7 +40,6 @@ void loop() {
     if(output.COMMAND == NO_STATE_DETECTED)return; 
 
     //rotate: 
-    if (previousCommand != output.COMMAND) initialYaw = ypr.yaw;
     switch (output.COMMAND)
     {
         case SETUP:
@@ -50,10 +49,13 @@ void loop() {
         case ROTATE_CW:
         Serial.println(initialYaw);
         Serial.println(currentYaw);
-        previousCommand = output.COMMAND;
+        if (previousCommand != output.COMMAND) {
+            initialYaw = ypr.yaw;
+            previousCommand = ROTATE_CW;
+        } 
 
-        rotate(initialYaw, currentYaw, output.INPUT_VAL);
-        
+        rotate(initialYaw, currentYaw, 1); 
+
         break;
         case ROTATE_CCW:
         Serial.println(initialYaw);
