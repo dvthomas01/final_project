@@ -11,6 +11,9 @@
  #include "robot_drive.h"
  #include "robot_motion_control.h"
  #include "RobotFunctions.h"   // brings in the `commands` enum
+ #include "robot_pinout.h"
+ #include "wireless.h"
+ #include "util.h"
  
  HardwareSerial mySerial(1);               // UART1: RX = 44, TX = 43
  
@@ -97,14 +100,16 @@
  //  Arduino lifecycle
  // ──────────────────────────────────────────────────────────────
  void setup() {
-    setupIMU();
-    setupDrive();
-    readIMU(false);
-
-    mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
-    mySerial.setTimeout(10);  // 10 ms timeout
-    Serial.begin(115200);                      // USB debug
-    Serial.println("ESP32‑S3 ready");
+     setupIMU();
+     setupDrive();
+     readIMU(false);
+    //  setupWireless();
+ 
+     mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
+     mySerial.setTimeout(10);  // 10 ms timeout
+     Serial.begin(115200);                      // USB debug
+     Serial.println("ESP32‑S3 ready");
+     pinMode(LIMIT_SWITCH_PIN, INPUT_PULLUP); // Set limit switch pin to pullup mode
  }
  
  void loop() {

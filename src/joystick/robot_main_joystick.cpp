@@ -4,6 +4,7 @@
 #include "util.h"
 #include "robot_motion_control.h"
 
+
 void setup() {
     Serial.begin(115200);
     setupDrive();
@@ -19,12 +20,15 @@ void loop() {
         //otherwise setpoints stay 0
         if(controllerMessage.debouncedInputF == 0){
             updateFlywheelSetpoints(-5,-5);
+            if (Serial) Serial.println("Grabbing");
         }
         else if(controllerMessage.debouncedInputR == 0){
             updateFlywheelSetpoints(5,5);
+            if (Serial) Serial.println("Spitting");
         }
         else{
             updateFlywheelSetpoints(0,0);
+            if (Serial) Serial.println("Holding");
         }
     }
 

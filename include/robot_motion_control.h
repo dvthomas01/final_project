@@ -2,9 +2,11 @@
 #define ROBOT_MOTION_CONTROL_H
 
 // wheel radius in meters
-#define r 0.06
+//#define 
+const float r = 0.06;
 // distance from back wheel to center in meters
-#define b 0.2
+//#define 
+const float b = 0.2;
 
 // Define enumeration of vehicle trajectories for followTrajectory
 enum trajectoryMode {
@@ -33,6 +35,8 @@ enum commands {
     COLOR_DETECT_STORE,
     DRIVE_TO_PICKUP,
     FINISH,
+    STOP_DRIVE,
+    STOP_DEPOSIT,
     NO_STATE_DETECTED
 };
 
@@ -126,7 +130,7 @@ jetsonOutput jetsonComms();
 void followTrajectory();
 
 // Updates Odometry 
-// TODO: Do we need this?
+// For joystick control
 void updateOdometry();
 
 

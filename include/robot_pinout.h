@@ -27,4 +27,7 @@
 #define BNO08X_INT 13
 #define BNO08X_RESET 14
 
+// Limit Switch Pin
+#define LIMIT_SWITCH_PIN 34
+
 #endif // ROBOT_PINOUT_H
