@@ -53,7 +53,7 @@ class Setup:
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
             if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
-                self.step = 3 
+                self._step = 3 
                 self._sent = True
                 return None
             self._sent = True
@@ -61,7 +61,7 @@ class Setup:
             return None   
         if self._step == 3: 
             self._link.enqueue(Command.STOP.value)  
-            self.step = 4
+            self._step = 4
             self._sent = True
             return None
         if self._step == 4 and event and event.name == "STOP":
