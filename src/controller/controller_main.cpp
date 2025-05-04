@@ -36,7 +36,7 @@ void setup() {
 
 void loop() {
     // Read and send controller sensors
-    EVERY_N_MILLIS(50) {
+    EVERY_N_MILLIS(20) {
 
         bounceF.update();
         bounceR.update();

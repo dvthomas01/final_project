@@ -187,6 +187,7 @@ void grabBin() {
 }
 
 void depositBin() {
+    // Jetson will send stop signal, just get spinin
     double speeds[2] = {flywheelSpeed, flywheelSpeed};
     updateFlywheelSetpoints(speeds[0], speeds[1]);
 }
