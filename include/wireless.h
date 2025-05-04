@@ -6,8 +6,8 @@
 #include "dpad.h"
 #include "display.h"
 
-const uint8_t controllerAddr[] = {0xF4, 0x12, 0xFA, 0x40, 0x9C, 0x54};
-const uint8_t robotAddr[] = {0xEC, 0xDA, 0x3B, 0x5C, 0x8A, 0x4C};
+const uint8_t controllerAddr[] = {0xEC, 0xDA, 0x3B, 0x5C, 0x89, 0xD8};;
+const uint8_t robotAddr[] = {0xF4, 0x12, 0xFA, 0x40, 0x9C, 0x54}; 
 
 struct ControllerMessage { //This struct is defined for a complex controller, but in lab 7 we only use a single joystick, so values are only written to joystick1.
     unsigned long millis;
