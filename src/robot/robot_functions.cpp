@@ -144,7 +144,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
     }
 
     // 3.  Otherwise keep spinning
-    const float SPEED = 0.75;
+    const float SPEED = 1;
     double left  =  SPEED * dir;
     double right = -left;
     Serial.println(left);
