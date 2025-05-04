@@ -9,7 +9,7 @@ class SerialLink:
 
     # ------------ public -------------
     def enqueue(self, cmd: str) -> None:
-        print(cmd + MSG_TERMINATOR)
+        print("link.py: " + cmd + MSG_TERMINATOR)
         self._tx_q.append(cmd + MSG_TERMINATOR)
 
     def poll(self) -> list[str]:
