@@ -12,18 +12,18 @@ void setup() {
 }
 
 void loop() {
-    // Update velocity setpoints based on trajectory at 50Hz
-    EVERY_N_MILLIS(20) {
+    // Update velocity setpoints based on trajectory at 100Hz
+    EVERY_N_MILLIS(10) {
         followTrajectory();
         // we want to say if buttonF = 0 update setpoints for both to turn forwards
         // if button R = 0 udpate setpoints for both to turn backwards
         //otherwise setpoints stay 0
         if(controllerMessage.debouncedInputF == 0){
-            updateFlywheelSetpoints(-5,-5);
+            updateFlywheelSetpoints(-2,-2);
             if (Serial) Serial.println("Grabbing");
         }
         else if(controllerMessage.debouncedInputR == 0){
-            updateFlywheelSetpoints(5,5);
+            updateFlywheelSetpoints(2,2);
             if (Serial) Serial.println("Spitting");
         }
         else{
@@ -37,8 +37,8 @@ void loop() {
         updatePIDs();
     }
 
-    // Send and print robot values at 20Hz
-    EVERY_N_MILLIS(50) {
+    // Send and print robot values at 50Hz
+    EVERY_N_MILLIS(20) {
         updateOdometry();
         sendRobotData();
 
