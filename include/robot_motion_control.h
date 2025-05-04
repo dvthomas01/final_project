@@ -130,7 +130,7 @@ jetsonOutput jetsonComms();
 void followTrajectory();
 
 // Updates Odometry 
-// TODO: Do we need this?
+// For joystick control
 void updateOdometry();
 
 
