@@ -29,15 +29,16 @@ class Controller:
         replies = self._link.poll()
         #print("Step 1 time:")
         #print(time.monotonic() - t0)
-        t0 = time.monotonic()
+        #t0 = time.monotonic()
 
         # 2. Convert robot replies or vision info into Events
         event = self._interpret(replies)
         #print("Step 2 time:")
         #print(time.monotonic() - t0)
-        t0 = time.monotonic()
+        #t0 = time.monotonic()
 
         # 3. Let the current phase advance
+        print("EVENT NAME: " + event.name)
         nxt = self._impl.tick(event)
         if nxt == Phase.FINISH:
               self._phase = nxt
