@@ -83,7 +83,13 @@
  static bool commandComplete() {
     // Currently the only long‑running command is ROTATE_*, which tells us it’s
     // done by printing "ROTATE_DONE" on USB Serial.
+
     String line = mySerial.readStringUntil('\n');
+    Serial.println("commandComplete line: " +line);
+    if (line.indexOf("STOP") >= 0) {
+        mySerial.println("STOP"); 
+    }
+
     return line.indexOf("STOP") >= 0;
     /*
     if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
@@ -124,7 +130,7 @@
             fetchJetsonCommand();
             if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) {
                 state = ACTIVE;
-                Serial.println("robotmain.cpp WAITING: " + ctx.cmd);
+                Serial.println("In Waiting to Active transition");
             } 
             break;
 
