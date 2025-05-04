@@ -7,7 +7,7 @@
 
 //#define UTURN
 // #define CIRCLE
-//#define JOYSTICK
+#define JOYSTICK
 //#define YOUR_TRAJECTORY
 
 extern RobotMessage robotMessage;
@@ -39,7 +39,10 @@ void followTrajectory() {
         double forward = abs(controllerMessage.joystick1.y) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.y, -1, 1, -MAX_FORWARD, MAX_FORWARD);
         double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
         updateDriveSetpoints(forward + turn, forward - turn);
+        if (Serial) Serial.println("Driving");
     
+    } else {
+        Serial.println("No Wireless Data");
     }
     #endif 
 

@@ -3,7 +3,7 @@
 #include <WiFi.h>
 #include "wireless.h"
 
-// #define PRINT_CONTROLLER
+#define PRINT_CONTROLLER
 // #define PRINT_ROBOT
 
 const uint8_t * peerAddr = controllerAddr;
