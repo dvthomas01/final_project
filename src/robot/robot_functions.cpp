@@ -7,24 +7,9 @@
 #include "robot_motion_control.h"
 #include "RobotFunctions.h"
 
-// Create an instance of the MotorDriver class
-/*
-MotorDriver driveMotors[2] = { {A_DIR1, A_PWM1, 0}, {A_DIR2, A_PWM2, 1} };
-MotorDriver flywheels[2] = { {B_DIR1, B_PWM1, 0}, {B_DIR2, B_PWM2, 1} };
-*/
-
-/*
-EncoderVelocity encoders[NUM_MOTORS] = { {ENCODER1_A_PIN, ENCODER1_B_PIN, CPR_312_RPM, 0.2},
-                                         {ENCODER2_A_PIN, ENCODER2_B_PIN, CPR_312_RPM, 0.2},
-                                         {ENCODER3_A_PIN, ENCODER3_B_PIN, CPR_312_RPM, 0.2}, 
-                                         {ENCODER4_A_PIN, ENCODER4_B_PIN, CPR_312_RPM, 0.2} };
-*/
-
 // Rotate Variables
-// float initialYaw = 0;
 float rotateSpeedR = -1; //Default set to clockwise rotation
 float rotateSpeedL = 1;
-
 
 // Align Variables
 float camToBackDist = 7543789543975943; // MEASURE
@@ -87,18 +72,13 @@ jetsonOutput jetsonComms() {
 
     // Decode Jetson command from string to enum
     input_parsed[0].toUpperCase(); // Ensure command is same case
-    Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ");
-    Serial.println(input_parsed[1]);
-    Serial.println(input_funcValChar);
     if(input_parsed[0] == "SETUP") {
         output.COMMAND = SETUP;
     } else if(input_parsed[0] == "ALIGN"){
         output.COMMAND = ALIGN;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==-1){
-        Serial.println("CCW TRIPPED");
         output.COMMAND = ROTATE_CCW;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==1){
-        Serial.println("CW TRIPPED");
         output.COMMAND = ROTATE_CW;
     } else if(input_parsed[0] == "F_ALIGN"){
         output.COMMAND = FINE_ALIGN;
@@ -138,12 +118,6 @@ jetsonOutput jetsonComms() {
 
     return output;
 }
-/*
-void straightline() {
-    trajectoryMode trajectory = FORWARD;
-    followTrajectory(trajectory);
-}*/
-
 
 void rotate(float initialYaw, float currentYaw, int dir)
 /* dir =  1  → clockwise  (ROTATE_CW)
@@ -160,72 +134,24 @@ void rotate(float initialYaw, float currentYaw, int dir)
         diff = 360.0 - diff;     // handle wrap‑around
         Serial.println("Wrap-around");
     }
+
     // 2.  If we’re within ±5 ° of 90 °, stop and acknowledge
     if (diff >= 85.0) {
-        updateDriveSetpoints(0, 0);                // brakes on both wheels
-        mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this
+        updateDriveSetpoints(0, 0);
+        mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this specific String
         Serial.println("Rotation Finished \n");
-        return;                               // no further motor commands
+        return;                               
     }
 
     // 3.  Otherwise keep spinning
-    const float SPEED = 0.75;                // tweak to taste
-    double left  =  SPEED * dir;              // CW:  +0.75  CCW: –0.75
-    double right = -left;                     // opposite wheel
+    const float SPEED = 0.75;
+    double left  =  SPEED * dir;
+    double right = -left;
     Serial.println(left);
     Serial.println();
 
     updateDriveSetpoints(left, right);
-    //return;
 }
-
-/*void rotate(float initialYaw, float currentYaw, int dir) { // 1 = right (clockwise), -1 = left (counterclockwise), ccw is positive
-    double left = 0;
-    double right = 0;    
-    
-    if ((initialYaw > -86.5) && (dir == 1))
-    {
-        float yawSetpoint = initialYaw - 86.5;
-        if (currentYaw > yawSetpoint){
-            left = 0.75;
-            right = -left;
-        }
-        Serial.println("Hi4");
-    }    
-    
-    if ((initialYaw < -86.5) && (dir == 1)) {
-        float yawSetpoint = initialYaw + 273.5;
-        float yawDiff = abs(yawSetpoint - currentYaw);
-        if (((currentYaw > yawSetpoint) && (yawDiff < 90)) || ((currentYaw < yawSetpoint) && (yawDiff > 180))) {
-            left = -0.75;
-            right = -left;
-            Serial.println("Hi");
-        }
-    }    
-    
-    if ((initialYaw < 86.5) && (dir == -1))
-    {
-        float yawSetpoint = initialYaw + 86.5;
-        if (currentYaw > yawSetpoint) {
-            left = -0.75;
-            right = - left;
-        }
-        Serial.println("Hi2");
-    }    
-    
-    if ((initialYaw > 86.5) && (dir == -1)) {
-        float yawSetpoint = initialYaw - 273.5;
-        float yawDiff = abs(yawSetpoint - currentYaw);
-        if (((currentYaw < yawSetpoint) && (yawDiff < 90)) || ((currentYaw > yawSetpoint) && (yawDiff > 180))) {
-            left = -0.75;
-            right = -left;
-        }
-        Serial.println("Hi3");
-    }    
-    Serial.println(left);
-    updateDriveSetpoints(left, right);
-    updatePIDs();
-}*/
 
 void driveStraight(int dir) {
     Serial.println("driveStraight");
@@ -235,7 +161,7 @@ void driveStraight(int dir) {
     // Update drive setpoints
     updateDriveSetpoints(driveSpeed, driveSpeed);
     updatePIDs();
-    delay(1000);
+    delay(1000); //Temporary, this just provides a basic stop condition
     updateDriveSetpoints(0,0);
     updatePIDs();
     mySerial.println("STRAIGHT_DONE");
@@ -243,14 +169,12 @@ void driveStraight(int dir) {
 }
 
 void grabBin() {
-    // Speed > 0 is for deposit
     double speeds[2] = {-flywheelSpeed, -flywheelSpeed};
     updateFlywheelSetpoints(speeds[0], speeds[1]);
 
 }
 
 void depositBin() {
-    // Speed > 0 is for deposit
     double speeds[2] = {flywheelSpeed, flywheelSpeed};
     updateFlywheelSetpoints(speeds[0], speeds[1]);
 }

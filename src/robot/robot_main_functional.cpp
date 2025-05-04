@@ -20,13 +20,13 @@
  //  `CommandCtx(out.COMMAND, out.INPUT_VAL, ypr.yaw)` compiles.
  // ──────────────────────────────────────────────────────────────
  struct CommandCtx {
-     commands cmd;      // what we’re doing (ROTATE_CW, ALIGN, …)
-     int       arg;     // extra integer argument from Jetson
-     float     yaw0;    // yaw where the command started
-     bool      done;    // set true once the command completes
- 
-     CommandCtx() : cmd(NO_STATE_DETECTED), arg(0), yaw0(0), done(true) {}
-     CommandCtx(commands c, int a, float y) : cmd(c), arg(a), yaw0(y), done(false) {}
+    commands cmd;      // what we’re doing (ROTATE_CW, ALIGN, …)
+    int       arg;     // extra integer argument from Jetson
+    float     yaw0;    // yaw where the command started
+    bool      done;    // set true once the command completes
+
+    CommandCtx() : cmd(NO_STATE_DETECTED), arg(0), yaw0(0), done(true) {}
+    CommandCtx(commands c, int a, float y) : cmd(c), arg(a), yaw0(y), done(false) {}
  };
  
  static CommandCtx ctx;           // current command context
@@ -37,106 +37,105 @@
  // ──────────────────────────────────────────────────────────────
  //  Helper‑functions – keep main loop skinny
  // ──────────────────────────────────────────────────────────────
+
  static void holdStill() {
-     updateDriveSetpoints(0, 0);
-     updatePIDs();
+    updateDriveSetpoints(0, 0);
+    updatePIDs();
  }
  
  static void fetchJetsonCommand() {
-     jetsonOutput out = jetsonComms();  // blocks ~5 ms
-     if (out.COMMAND == FINISH) {
-         ctx = CommandCtx(FINISH, 0, ypr.yaw);
-         return;
-     }
-     if (out.COMMAND != NO_STATE_DETECTED) {
-         ctx = CommandCtx(out.COMMAND, out.INPUT_VAL, ypr.yaw);
-         Serial.print("Starting command: ");
-         Serial.println(ctx.cmd);
-     }
+    jetsonOutput out = jetsonComms();  // blocks ~5 ms
+    if (out.COMMAND == FINISH) {
+        ctx = CommandCtx(FINISH, 0, ypr.yaw);
+        return;
+    }
+    if (out.COMMAND != NO_STATE_DETECTED) {
+        ctx = CommandCtx(out.COMMAND, out.INPUT_VAL, ypr.yaw);
+        Serial.print("Starting command: ");
+        Serial.println(ctx.cmd);
+    }
  }
  
  static void executeCommand() {
-     switch (ctx.cmd) {
-         case ROTATE_CCW:
+    switch (ctx.cmd) {
+        case ROTATE_CCW:
             Serial.println("CCW Running");
             rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             break;
-         case ROTATE_CW:
+        case ROTATE_CW:
             Serial.println("CW Running");
-            // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
-            // grabBin();
-            driveStraight(1);
+            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             break;
-         /* TODO: plug in other command handlers here */
-         case APPROACH_PICKUP_POSE: 
+        case APPROACH_PICKUP_POSE: 
             Serial.println("Driving Straight");
             driveStraight(1);
             break;
-         case STOP:
+        /* TODO: plug in other command handlers here */
+        case STOP:
             updateDriveSetpoints(0, 0);
             break;
-         default:
+        default:
             break;
      }
  }
  
  static bool commandComplete() {
-     // Currently the only long‑running command is ROTATE_*, which tells us it’s
-     // done by printing "ROTATE_DONE" on USB Serial.
-     if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
+    // Currently the only long‑running command is ROTATE_*, which tells us it’s
+    // done by printing "ROTATE_DONE" on USB Serial.
+    if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
         String line = mySerial.readStringUntil('\n');
         return line.indexOf("ROTATE_DONE") >= 0;
-     }
-     if (ctx.cmd == APPROACH_PICKUP_POSE) {
+    }
+    if (ctx.cmd == APPROACH_PICKUP_POSE) {
         String line = mySerial.readStringUntil('\n');
         return line.indexOf("STRAIGHT_DONE") >= 0; 
-     }
-     return false;
+    }
+    return false;
  }
  
  // ──────────────────────────────────────────────────────────────
  //  Arduino lifecycle
  // ──────────────────────────────────────────────────────────────
  void setup() {
-     setupIMU();
-     setupDrive();
-     readIMU(false);
- 
-     mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
-     mySerial.setTimeout(10);  // 10 ms timeout
-     Serial.begin(115200);                      // USB debug
-     Serial.println("ESP32‑S3 ready");
+    setupIMU();
+    setupDrive();
+    readIMU(false);
+
+    mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
+    mySerial.setTimeout(10);  // 10 ms timeout
+    Serial.begin(115200);                      // USB debug
+    Serial.println("ESP32‑S3 ready");
  }
  
  void loop() {
-     readIMU(false);                // Always keep yaw fresh
- 
-     static enum { WAITING, ACTIVE, FINISHED } state = WAITING;
- 
-     switch (state) {
-         case WAITING:
-             fetchJetsonCommand();
-             if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) state = ACTIVE;
-             break;
- 
-         case ACTIVE:
-             executeCommand();
-             if (commandComplete()) {
-                 ctx = CommandCtx();       // reset to default (done=true)
-                 state = WAITING;
-             }
-             if (ctx.cmd == FINISH) {
-                 holdStill();
-                 state = FINISHED;
-             }
-             break;
- 
-         case FINISHED:
-             holdStill();
-             break;
-     }
- 
-     EVERY_N_MILLIS(5) { updatePIDs(); }
-     delay(10);   // relieve the watchdog
+    readIMU(false);                // Always keep yaw fresh
+
+    static enum { WAITING, ACTIVE, FINISHED } state = WAITING;
+
+    switch (state) {
+        case WAITING:
+            fetchJetsonCommand();
+            if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) state = ACTIVE;
+            break;
+
+        case ACTIVE:
+            executeCommand();
+            if (commandComplete()) {
+                ctx = CommandCtx();       // reset to default (done=true)
+                state = WAITING;
+            }
+            if (ctx.cmd == FINISH) {
+                holdStill();
+                state = FINISHED;
+            }
+            break;
+
+        case FINISHED:
+            holdStill();
+            break;
+    }
+
+    EVERY_N_MILLIS(5) { updatePIDs(); }
+    delay(10);   // relieve the watchdog
  }
  
