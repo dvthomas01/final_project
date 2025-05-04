@@ -31,18 +31,13 @@ void setupDrive()
 }
 
 void updateDriveSetpoints(double left, double right) {
-    setpoints[2] = left; // setpoints[0]; //left flywheel
-    setpoints[3] = right; //setpoints[1]; //right flywheel
-    // Serial.print(left); Serial.print(" "); Serial.println(right);
-//    setpoints[2] = left; //drive
-//    setpoints[3] = right; //drive
+    setpoints[2] = left;
+    setpoints[3] = right;
 }
 
 void updateFlywheelSetpoints(double left, double right) {
     setpoints[0] = left; //left flywheel
     setpoints[1] = right; //right flywheel
-    // setpoints[2] = setpoints[2]; //drive
-    // setpoints[3] = setpoints[3]; //drive
 }
 
 void updatePIDs() {

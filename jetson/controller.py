@@ -27,17 +27,19 @@ class Controller:
         t0 = time.monotonic()
         # 1. Push queued UART writes & grab any replies
         replies = self._link.poll()
-        print("Step 1 time:")
-        print(time.monotonic() - t0)
-        t0 = time.monotonic()
+        #print("Step 1 time:")
+        #print(time.monotonic() - t0)
+        #t0 = time.monotonic()
 
         # 2. Convert robot replies or vision info into Events
         event = self._interpret(replies)
-        print("Step 2 time:")
-        print(time.monotonic() - t0)
-        t0 = time.monotonic()
+        #print("Step 2 time:")
+        #print(time.monotonic() - t0)
+        #t0 = time.monotonic()
 
         # 3. Let the current phase advance
+        if event:
+            print("EVENT NAME: " + event.name)
         nxt = self._impl.tick(event)
         if nxt == Phase.FINISH:
               self._phase = nxt
@@ -47,8 +49,8 @@ class Controller:
             self._impl = PHASE_IMPLS[nxt](self._link)
             self._impl.enter()
 
-        print("Step 3 time:")
-        print(time.monotonic() - t0)
+        #print("Step 3 time:")
+        #print(time.monotonic() - t0)
 
     # ------------- helpers ------------
     def _interpret(self, replies: list[str]) -> Event | None:
@@ -59,6 +61,8 @@ class Controller:
                 return Event("ALIGNED")
             if line == "ROTATE_DONE":
                 return Event("ROTATE_DONE")
+            if line == "STRAIGHT_DONE":
+                return Event("STRAIGHT_DONE")
             #TODO: add more
         return None
         

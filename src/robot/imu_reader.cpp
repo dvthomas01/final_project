@@ -56,18 +56,18 @@ void readIMU(bool printData) {
     if (bno08x.getSensorEvent(&sensorValue)) 
       quaternionToEulerRV(&sensorValue.un.arvrStabilizedRV, &ypr, true);
   
-      if (printData) {
-          Serial.print(sensorValue.status);     Serial.print("\t");  // This is accuracy in the range of 0 to 3
-          Serial.print(ypr.yaw);                Serial.print("\t");
-          Serial.print(ypr.pitch);              Serial.print("\t");
-          Serial.println(ypr.roll);
-      }
+    if (printData) {
+      Serial.print(sensorValue.status);     Serial.print("\t");  // This is accuracy in the range of 0 to 3
+      Serial.print(ypr.yaw);                Serial.print("\t");
+      Serial.print(ypr.pitch);              Serial.print("\t");
+      Serial.println(ypr.roll);
+    }
 }
   
 void setupIMU() {
     //IMU Initialization
     Serial.begin(115200);
-    while (!Serial) delay(10);
+    //while (!Serial) delay(10);
 
     Serial.println("Adafruit BNO08x test!");
 
