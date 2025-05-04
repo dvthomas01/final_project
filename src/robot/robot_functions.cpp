@@ -166,7 +166,7 @@ void driveStraight(int dir) {
     delay(1000); //Temporary, this just provides a basic stop condition
     updateDriveSetpoints(0,0);
     updatePIDs();
-    mySerial.println("STRAIGHT_DONE");
+    mySerial.println("DRIVING");
     
 }
 

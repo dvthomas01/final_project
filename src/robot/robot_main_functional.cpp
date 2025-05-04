@@ -124,7 +124,7 @@
             fetchJetsonCommand();
             if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) {
                 state = ACTIVE;
-                Serial.println("robot_main.cpp WAITING: " + ctx.cmd);
+                Serial.println("robotmain.cpp WAITING: " + ctx.cmd);
             } 
             break;
 

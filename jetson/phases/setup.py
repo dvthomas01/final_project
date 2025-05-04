@@ -54,7 +54,7 @@ class Setup:
             if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
                 self._sent = True
-                return Command.FINISH.value
+                return Command.FINISH
             self._sent = True
             print("setup.py STEP 3")
             return None   
