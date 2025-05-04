@@ -38,6 +38,7 @@ class Setup:
             self._link.enqueue(Command.ROTATE_CW.value)   # "ROTATE,1"
             self._sent = True
             self._step = 1 
+            print("STEP 1")
             return None
 
         if self._step == 1 and event and event.name == "ROTATE_DONE":
@@ -45,12 +46,14 @@ class Setup:
             self._sent = True
             self._t0 = time.monotonic()
             self._step = 2
+            print("STEP 2")
             return None
         
         if self._step == 2 and event and event.name == "STRAIGHT_DONE":
             #if time.monotonic() - self._t0 >= self._driveduration:
             #    self._link.enqueue(Command.STOP.value) 
             self._sent = True
+            print("STEP 3, FINISHING")
             return Phase.FINISH     
                    
         return None
