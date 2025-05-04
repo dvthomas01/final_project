@@ -11,6 +11,8 @@
  #include "robot_drive.h"
  #include "robot_motion_control.h"
  #include "RobotFunctions.h"   // brings in the `commands` enum
+ #include "wireless.h"
+ #include "util.h"
  
  HardwareSerial mySerial(1);               // UART1: RX = 44, TX = 43
  
@@ -100,6 +102,7 @@
      setupIMU();
      setupDrive();
      readIMU(false);
+     setupWireless();
  
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
      mySerial.setTimeout(10);  // 10 ms timeout

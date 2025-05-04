@@ -2,9 +2,11 @@
 #define ROBOT_MOTION_CONTROL_H
 
 // wheel radius in meters
-#define r 0.06
+//#define 
+const float r = 0.06;
 // distance from back wheel to center in meters
-#define b 0.2
+//#define 
+const float b = 0.2;
 
 // Define enumeration of vehicle trajectories for followTrajectory
 enum trajectoryMode {

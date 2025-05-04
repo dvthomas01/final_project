@@ -12,11 +12,11 @@ const uint8_t robotAddr[] = {0xF4, 0x12, 0xFA, 0x40, 0x9B, 0xDC};
 struct ControllerMessage { //This struct is defined for a complex controller, but in lab 7 we only use a single joystick, so values are only written to joystick1.
     unsigned long millis;
     JoystickReading joystick1;
-    JoystickReading joystick2;
+    /*JoystickReading joystick2;
     DPadReading dPad;
     bool buttonL;
     bool buttonR;
-    TouchReading touchPoint;
+    TouchReading touchPoint;*/
     int debouncedInputF;
     int debouncedInputR;
 
