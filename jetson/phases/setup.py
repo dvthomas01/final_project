@@ -50,11 +50,11 @@ class Setup:
             print("STEP 2")
             return None
         
-        if self._step == 2 and event and event.name == "STRAIGHT_DONE":
+        if self._step == 2 and event:
             #if time.monotonic() - self._t0 >= self._driveduration:
             #    self._link.enqueue(Command.STOP.value) 
             self._sent = True
             print("STEP 3, FINISHING")
-            return Phase.FINISH     
+            return None   
                    
         return None
