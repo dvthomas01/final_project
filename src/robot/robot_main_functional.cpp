@@ -54,8 +54,6 @@
     }
     if (out.COMMAND != NO_STATE_DETECTED) {
         ctx = CommandCtx(out.COMMAND, out.INPUT_VAL, ypr.yaw);
-        Serial.print("Starting command: ");
-        Serial.println(ctx.cmd);
     }
  }
  
@@ -85,16 +83,19 @@
  static bool commandComplete() {
     // Currently the only long‑running command is ROTATE_*, which tells us it’s
     // done by printing "ROTATE_DONE" on USB Serial.
+    String line = mySerial.readStringUntil('\n');
+    return line.indexOf("STOP") >= 0;
+    /*
     if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
         String line = mySerial.readStringUntil('\n');
-        if (line.indexOf("ROTATE_DONE") >= 0) Serial.println("commandComplete: " + line     );
-        return line.indexOf("ROTATE_DONE") >= 0;
+        if (line.indexOf("STOP") >= 0) Serial.println("commandComplete: " + line     );
+        return line.indexOf("STOP") >= 0;
     }
     if (ctx.cmd == APPROACH_PICKUP_POSE) {
         String line = mySerial.readStringUntil('\n');
         return line.indexOf("STRAIGHT_DONE") >= 0; 
     }
-    return false;
+    return false;*/
  }
  
  // ──────────────────────────────────────────────────────────────
