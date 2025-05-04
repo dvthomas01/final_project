@@ -22,8 +22,8 @@ EncoderVelocity encoders[NUM_MOTORS] = { {ENCODER1_A_PIN, ENCODER1_B_PIN, CPR_31
 
 // Rotate Variables
 // float initialYaw = 0;
-float rotateSpeedR = -1; //Default set to clockwise rotation
-float rotateSpeedL = 1;
+// float rotateSpeedR = -1; //Default set to clockwise rotation
+// float rotateSpeedL = 1;
 
 
 // Align Variables
@@ -33,7 +33,7 @@ float alignSpeed = 1;
 // Box Collection Variables
 float distToPickUp = 46382537298543432; // MEASURE
 float driveUpSpeed = 1;
-double flywheelSpeed = 0.5;
+double flywheelSpeed = .75;
 
 // Box Drop Off Variables
 float distToDropOff = 35854392574232102; // MEASURE
@@ -87,7 +87,7 @@ jetsonOutput jetsonComms() {
 
     // Decode Jetson command from string to enum
     input_parsed[0].toUpperCase(); // Ensure command is same case
-    Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ");
+    // Serial.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: ");
     Serial.println(input_parsed[1]);
     Serial.println(input_funcValChar);
     if(input_parsed[0] == "SETUP") {
@@ -244,8 +244,18 @@ void driveStraight(int dir) {
 void grabBin() {
     // Speed > 0 is for deposit
     double speeds[2] = {-flywheelSpeed, -flywheelSpeed};
-    updateFlywheelSetpoints(speeds[0], speeds[1]);
 
+    // Behavior changes if limit switch depressed
+    // 0 - Depressed -> False
+    // 1 - Open -> True
+    if(digitalRead(LIMIT_SWITCH_PIN) == HIGH) {
+        // Switch Open
+        updateFlywheelSetpoints(speeds[0], speeds[1]);
+        return;
+    } 
+
+    // Switch Closed
+    updateFlywheelSetpoints(0, 0);
 }
 
 void depositBin() {
