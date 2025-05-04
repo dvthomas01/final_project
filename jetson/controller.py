@@ -38,7 +38,8 @@ class Controller:
         #t0 = time.monotonic()
 
         # 3. Let the current phase advance
-        print("EVENT NAME: " + event.name)
+        if event:
+            print("EVENT NAME: " + event.name)
         nxt = self._impl.tick(event)
         if nxt == Phase.FINISH:
               self._phase = nxt
