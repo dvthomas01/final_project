@@ -35,8 +35,7 @@ class Setup:
     def tick(self, event: Event | None) -> Phase | None:
 
         if self._step == 0 and not self._sent:
-            #self._link.enqueue(Command.ROTATE_CW.value)   # "ROTATE,1"
-            self._link.enqueue(Command.APPROACH_PICKUP.value)
+            self._link.enqueue(Command.ROTATE_CW.value)   # "ROTATE,1"
             self._sent = True
             self._step = 1 
             print("STEP 1")
