@@ -111,8 +111,8 @@ jetsonOutput jetsonComms() {
         output.COMMAND = NO_STATE_DETECTED;
     }
     
-    Serial.println("hello from jestson comms");
-    Serial.print(input_parsed[0]); Serial.println(input_parsed[1]);
+    //Serial.println("hello from jestson comms");
+    //Serial.print(input_parsed[0]); Serial.println(input_parsed[1]);
     // If function arg exists, overwrite default
     if(input_parsed[1] != NULL){
         output.INPUT_VAL = input_val_int;
@@ -126,9 +126,9 @@ void rotate(float initialYaw, float currentYaw, int dir)
  * dir = -1  → counter‑clockwise (ROTATE_CCW)
  * Turns ~90 ° then prints "ROTATE_DONE"*/
  
-{   Serial.println("rotate");
-    Serial.println(initialYaw);
-    Serial.println(currentYaw);
+{   //Serial.println("rotate");
+    //Serial.println(initialYaw);
+    //Serial.println(currentYaw);
     // 1.  How much have we turned so far?
     float diff = fabsf(currentYaw - initialYaw);
     Serial.println(diff);
@@ -141,7 +141,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
     if (diff >= 85.0) {
         updateDriveSetpoints(0, 0);
         mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this specific String
-        Serial.println("Rotation Finished \n");
+        //Serial.println("Rotation Finished \n");
         return;                               
     }
 
@@ -149,8 +149,8 @@ void rotate(float initialYaw, float currentYaw, int dir)
     const float SPEED = 1;
     double left  =  SPEED * dir;
     double right = -left;
-    Serial.println(left);
-    Serial.println();
+    //Serial.println(left);
+    //Serial.println();
 
     updateDriveSetpoints(left, right);
 }

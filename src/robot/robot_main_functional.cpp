@@ -62,7 +62,7 @@
  static void executeCommand() {
     switch (ctx.cmd) {
         case ROTATE_CCW:
-            Serial.println("CCW Running");
+            //Serial.println("CCW Running");
             rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             break;
         case ROTATE_CW:
@@ -87,6 +87,7 @@
     // done by printing "ROTATE_DONE" on USB Serial.
     if (ctx.cmd == ROTATE_CW || ctx.cmd == ROTATE_CCW) {
         String line = mySerial.readStringUntil('\n');
+        if (line.indexOf("ROTATE_DONE") >= 0) Serial.println("commandComplete: " + line     );
         return line.indexOf("ROTATE_DONE") >= 0;
     }
     if (ctx.cmd == APPROACH_PICKUP_POSE) {
@@ -120,7 +121,10 @@
     switch (state) {
         case WAITING:
             fetchJetsonCommand();
-            if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) state = ACTIVE;
+            if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) {
+                state = ACTIVE;
+                Serial.println("robot_main.cpp WAITING: " + ctx.cmd);
+            } 
             break;
 
         case ACTIVE:

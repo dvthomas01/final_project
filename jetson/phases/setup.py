@@ -42,7 +42,7 @@ class Setup:
             return None
 
         if self._step == 1 and event and event.name == "ROTATE_DONE":
-            self._link.enqueue(Command.APPROACH_PICKUP.value) 
+            self._link.enqueue(Command.STOP.value) 
             self._sent = True
             self._t0 = time.monotonic()
             self._step = 2
@@ -50,6 +50,7 @@ class Setup:
             return None
         
         if self._step == 2 and event:
+            self._link.enqueue(Command.APPROACH_PICKUP.value) 
             if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
             self._sent = True
