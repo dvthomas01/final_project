@@ -11,6 +11,7 @@
  #include "robot_drive.h"
  #include "robot_motion_control.h"
  #include "RobotFunctions.h"   // brings in the `commands` enum
+ #include "robot_pinout.h"
  #include "wireless.h"
  #include "util.h"
  
@@ -65,9 +66,9 @@
             break;
          case ROTATE_CW:
             Serial.println("CW Running");
-            // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             // grabBin();
-            driveStraight(1);
+            // driveStraight(1);
             break;
          /* TODO: plug in other command handlers here */
          case APPROACH_PICKUP_POSE: 
@@ -102,12 +103,13 @@
      setupIMU();
      setupDrive();
      readIMU(false);
-     setupWireless();
+    //  setupWireless();
  
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
      mySerial.setTimeout(10);  // 10 ms timeout
      Serial.begin(115200);                      // USB debug
      Serial.println("ESP32‑S3 ready");
+     pinMode(LIMIT_SWITCH_PIN, INPUT_PULLUP); // Set limit switch pin to pullup mode
  }
  
  void loop() {
