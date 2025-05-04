@@ -59,6 +59,8 @@ class Controller:
                 return Event("ALIGNED")
             if line == "ROTATE_DONE":
                 return Event("ROTATE_DONE")
+            if line == "STRAIGHT_DONE":
+                return Event("STRAIGHT_DONE")
             #TODO: add more
         return None
         

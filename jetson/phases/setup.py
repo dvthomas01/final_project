@@ -47,7 +47,7 @@ class Setup:
             self._step = 2
             return None
         
-        if self._step == 2 and event:
+        if self._step == 2 and event.name == "STRAIGHT_DONE":
             if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
             self._sent = True

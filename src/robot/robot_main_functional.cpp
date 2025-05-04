@@ -69,6 +69,7 @@
             break;
          /* TODO: plug in other command handlers here */
          case APPROACH_PICKUP_POSE: 
+            Serial.println("Driving Straight");
             driveStraight(1);
             break;
          case STOP:
@@ -88,7 +89,7 @@
      }
      if (ctx.cmd == APPROACH_PICKUP_POSE) {
         String line = mySerial.readStringUntil('\n');
-        return line.indexOf("STOP") >=0; 
+        return line.indexOf("STRAIGHT_DONE") >= 0; 
      }
      return false;
  }

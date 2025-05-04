@@ -238,6 +238,7 @@ void driveStraight(int dir) {
     delay(1000);
     updateDriveSetpoints(0,0);
     updatePIDs();
+    mySerial.println("STRAIGHT_DONE");
     
 }
 
