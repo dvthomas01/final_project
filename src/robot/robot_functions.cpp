@@ -43,10 +43,10 @@ jetsonOutput jetsonComms() {
     Serial.println("Received on UART1: " + input); // USB debug
 
     if (input == "HELLO") {
-      mySerial.println("ACK HELLO");
-      Serial.println("HELLO from robot functions");
-      output.COMMAND = NO_STATE_DETECTED;
-      return output;
+        mySerial.println("ACK HELLO");
+        Serial.println("HELLO from robot functions");
+        output.COMMAND = NO_STATE_DETECTED;
+        return output;
     } 
 
     // Parse Jetson comma-seperated message
