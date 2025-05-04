@@ -170,8 +170,8 @@ void followTrajectory() {
 
 void updateOdometry() {
     // take angles from traction wheels only since they don't slip
-    currPhiL = encoders[2].getPosition();
-    currPhiR = -encoders[3].getPosition();
+    currPhiL = encoders[0].getPosition();
+    currPhiR = -encoders[1].getPosition();
     
     double dPhiL = currPhiL - prevPhiL;
     double dPhiR = currPhiR - prevPhiR;
