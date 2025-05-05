@@ -28,15 +28,16 @@ class AcquireCBin:
     def enter(self) -> None:
         self._sent = False
         self._step = 0
-    def read_latest_pose(self,path="../pose_values.txt"):
-    #Returns (front_x, front_z, side_x, side_z) or None if unavailable."""
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                vals = [float(x) for x in f.readline().strip().split()]
-                return vals if len(vals) == 4 else None
+    def read_latest_pose(self,path="pose_values.txt"):
+        print("read_latest_pose")
+        try: 
+    	    with open(path, "r", encoding="utf-8") as f:
+    	        vals = [float(x) for x in f.readline().strip().split()]
+    	        print (vals)
+    	        return vals if len(vals) == 4 else None
         except FileNotFoundError:
             return None
-
+        #Returns (front_x, front_z, side_x, side_z) or None if unavailable.
 
     # ---------------------------------------------------------------
     # Controller calls tick(event) every 50 ms.
@@ -47,22 +48,29 @@ class AcquireCBin:
         # align using left camerea
         if self._step == 0:
             pose = self.read_latest_pose()
+            print ("hello from tick step 0")
+            print (pose)
             if pose is None: 
             	return None
             dist = pose[2]
+            print (dist)
             if abs(dist) < 0.05: 
+                print ("hell from abs")
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 1
                 self._sent = True
             if dist > 0: 
+                print ("hello from Align F")
                 self._link.enqueue(Command.ALIGN_F.value)
                 self._sent = True
             else: 
+                print ("hello from Align B")
                 self._link.enqueue(Command.ALIGN_B.value)
                 self._sent = True
             print("acquire_Cbin.py STEP 1. DIST TO 9: ", dist)
             return None
         if self._step == 1: 
+        
             self._link.enqueue(Command.STOP.value)  
             self._step = 2
             self._sent = True
