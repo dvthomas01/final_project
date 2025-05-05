@@ -77,38 +77,38 @@ void depositBin();
 // Setup function, determines what position (assoc. AprilTag ID) bins start in
 // Returns bin color order from left (index 0) to right (index 2) as char array
 // b - blue, y - yellow, r - red
-char colorDetectStore();
+// char colorDetectStore();
 
 
 // HIGH-LEVEL FUNCTIONS
 
 
 // Perform sequence of commands to go from ramp start to ramp top platform
-void drive_up_ramp();
+// void drive_up_ramp();
 
 // Perform sequence of commands to go from ramp top platform to ramp end
-void drive_down_ramp();
+// void drive_down_ramp();
 
 // From current position, go to reference starting position for bin pickup
 // based on AprilTag waypoint(s)
-void drive_to_pickup();
+// void drive_to_pickup();
 
 // Find AprilTag of ID tagID, get in rough alignment to it
-void align(int tagID);
+// void align(int tagID);
 
 // Ensure the center x,y position of in-frame AprilTag is correct based on specified tag
 // Gets robot aligned with bin start/end spot for bin pickup/dropoff
-void fine_align(int tagID);
+// void fine_align(int tagID);
 
 // Drives forward while keeping AprilTag x,y positon fixed while driving to per-tag predefined
 // z-distance for picking up bin
-void approach_pickup_pose(int tagID);
+// void approach_pickup_pose(int tagID);
 
 
 // TODO: Change following if we decide to have unique backup procedure per AprilTag
 
 // Back up a fixed amount after depositing bin
-void backUp();
+// void backUp();
 
 // Back up a fixed amount after depositing bin
 // Distance is defined per-tag
@@ -117,7 +117,7 @@ void backUp();
 // TODO: Following may not be necessary, especiallyu= if we only drive in straight lines for robustness
 
 // Drive in S-shape to avoid the ramp and align with AprilTag 8
-void s_maneuver_align(int tagID);
+// void s_maneuver_align(int tagID);
 
 // Get current state from Jetson, return jetsonOutput struct with current state and function input
 jetsonOutput jetsonComms();
