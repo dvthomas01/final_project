@@ -54,9 +54,9 @@ def readApriltag(tagID,dir):
     while True:
         ret, frame = (None, None)
         if dir:
-            ret, frame = cv2.VideoCapture("/dev/video4").read()
-        else:
             ret, frame = cv2.VideoCapture("/dev/video10").read()
+        else:
+            ret, frame = cv2.VideoCapture("/dev/video4").read()
         if not ret:
             print("Failed to read from the webcam.")
             break
