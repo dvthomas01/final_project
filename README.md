@@ -39,4 +39,4 @@ From the terminal, type the following commands in order to connect wirelessly to
 ssh robot212@10.31.167.202
 Type password: admin
 cd Desktop/final_project/jetson/
-MR_1_jetson_main.py 
+MR_1_jetson_main.py   
