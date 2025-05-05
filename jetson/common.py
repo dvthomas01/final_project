@@ -8,8 +8,8 @@ MSG_TERMINATOR = "\n"          # keep it human‑readable
 class Command(str, Enum):
     # keep names identical to ESP enum
     SETUP = "SETUP"
-    ALIGN_F= "ALIGN,1"
-    ALIGN_B = "ALIGN,-1"
+    ALIGN_F= "ALIGN_F,1"
+    ALIGN_B = "ALIGN_B,-1"
     ROTATE_CW = "ROTATE,1"
     ROTATE_CCW = "ROTATE,-1"
     FINE_ALIGN = "F_ALIGN"
