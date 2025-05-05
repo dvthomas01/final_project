@@ -48,7 +48,7 @@ class AcquireCBin:
             else: 
                 self._link.enqueue(Command.ALIGN_B.value)
                 self._sent = True
-            print("acquire_Cbin.py STEP 1. DIST TO 9: " + dist)
+            print("acquire_Cbin.py STEP 1. DIST TO 9: ", dist)
             return None
         if self._step == 1: 
             self._link.enqueue(Command.STOP.value)  
