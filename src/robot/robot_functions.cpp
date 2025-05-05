@@ -133,6 +133,7 @@ jetsonOutput jetsonComms() {
 
 bool checkJoystickInterrupt() {
     if (freshWirelessData && controllerMessage.debouncedInterrupt == 0) {
+        Serial.println("INTERRUPT TRIGGERED");
         return true;
     }
     return false;
@@ -172,9 +173,9 @@ void readJoystick() {
     }
 
     // Update PID at 200Hz
-    EVERY_N_MILLIS(5) {
-        updatePIDs();
-    }
+    // EVERY_N_MILLIS(5) {
+    //     updatePIDs();
+    // }
 
     // Send and print robot values at 50Hz
     EVERY_N_MILLIS(20) {
