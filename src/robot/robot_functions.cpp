@@ -37,8 +37,8 @@ extern struct euler_t {
 
 jetsonOutput jetsonComms() {
     // declare output struct
-    jetsonOutput output;    
-    
+    jetsonOutput output;
+
     // Read Jetson message from serial
     String input = mySerial.readStringUntil('\n');
     input.trim(); // Remove whitespace/newline
@@ -49,7 +49,7 @@ jetsonOutput jetsonComms() {
         Serial.println("HELLO from robot functions");
         output.COMMAND = NO_STATE_DETECTED;
         return output;
-    } 
+    }
 
     // Parse Jetson comma-seperated message
 
@@ -105,12 +105,12 @@ jetsonOutput jetsonComms() {
     } else if(input_parsed[0] == "DRIVE_TO_PICKUP"){
         output.COMMAND = DRIVE_TO_PICKUP;
     } else if(input_parsed[0] == "FINISH") {
-        output.COMMAND = FINISH; 
+        output.COMMAND = FINISH;
     } else {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
     }
-    
+
     //Serial.println("hello from jestson comms");
     //Serial.print(input_parsed[0]); Serial.println(input_parsed[1]);
     // If function arg exists, overwrite default
@@ -125,7 +125,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
 /* dir =  1  → clockwise  (ROTATE_CW)
  * dir = -1  → counter‑clockwise (ROTATE_CCW)
  * Turns ~90 ° then prints "ROTATE_DONE"*/
- 
+
 {   //Serial.println("rotate");
     //Serial.println(initialYaw);
     //Serial.println(currentYaw);
@@ -142,11 +142,11 @@ void rotate(float initialYaw, float currentYaw, int dir)
         updateDriveSetpoints(0, 0);
         mySerial.println("ROTATE_DONE");      // ← Jetson is listening for this specific String
         //Serial.println("Rotation Finished \n");
-        return;                               
+        return;
     }
 
     // 3.  Otherwise keep spinning
-    const float SPEED = 1;
+    const float SPEED = .75;
     double left  =  SPEED * dir;
     double right = -left;
     //Serial.println(left);
@@ -167,7 +167,7 @@ void driveStraight(int dir) {
     updateDriveSetpoints(0,0);
     updatePIDs();
     mySerial.println("DRIVING");
-    
+
 }
 
 void grabBin() {
@@ -180,7 +180,7 @@ void grabBin() {
         // Switch Open
         updateFlywheelSetpoints(speeds[0], speeds[1]);
         return;
-    } 
+    }
 
     // Switch Closed
     updateFlywheelSetpoints(0, 0);
