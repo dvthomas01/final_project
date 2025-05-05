@@ -58,13 +58,7 @@ def main():
         # Attempt to find corners
         found, corners = cv2.findChessboardCorners(gray, chessboard_size, None)
         
-        # If found, refine and draw the corners
-        if found:
-            cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-            cv2.drawChessboardCorners(frame, chessboard_size, corners, found)
-
         # Show the live feed
-        cv2.imshow('Calibration - Live Feed', frame)
         key = cv2.waitKey(1) & 0xFF
         
         if key == ord('q'):
