@@ -1,9 +1,11 @@
 from controller import Controller
 from common import Phase
 import time
+from phases import apriltag_pose
 
 ctrl = Controller()
 print("Jetson FSM running – Ctrl‑C to quit")
+apriltag_pose.openCameras()
 
 try:
     while ctrl.phase is not Phase.FINISH:

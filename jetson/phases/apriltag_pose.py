@@ -2,6 +2,21 @@ import cv2
 import numpy as np
 import pyapriltags as apriltag
 
+def openCameras():
+    cap = cv2.VideoCapture("/dev/video10")
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+    cap.set(cv2.CAP_PROP_FOCUS, 0)
+    cap.set(cv2.CAP_PROP_FOURCC ,cv2.VideoWriter_fourcc('M', 'J', 'P', 'G') )
+
+    cap2 = cv2.VideoCapture("/dev/video4")
+    cap2.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    cap2.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap2.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+    cap2.set(cv2.CAP_PROP_FOCUS, 0)
+    cap2.set(cv2.CAP_PROP_FOURCC ,cv2.VideoWriter_fourcc('M', 'J', 'P', 'G') )
+
 def readApriltag(tagID,dir):
     #----------------------------------------------------------------------
     # 1. Load camera calibration data
@@ -33,26 +48,15 @@ def readApriltag(tagID,dir):
     #----------------------------------------------------------------------
     # 3. Initialize Webcam
     #----------------------------------------------------------------------
-    cap = cv2.VideoCapture("/dev/video10")
-    if dir:
-        cap = cv2.VideoCapture("/dev/video4")
-
-
-    #cap = cv2.VideoCapture("/dev/video10") # OR "/dev/video4" (side camera)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-    cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
-    cap.set(cv2.CAP_PROP_FOCUS, 0)
-    cap.set(cv2.CAP_PROP_FOURCC ,cv2.VideoWriter_fourcc('M', 'J', 'P', 'G') )
-
-    if not cap.isOpened():
-        print("Error: Could not open webcam.")
-        return
 
     print("Press 'q' to quit.")
 
     while True:
-        ret, frame = cap.read()
+        ret, frame = (None, None)
+        if dir:
+            ret, frame = cv2.VideoCapture("/dev/video4").read()
+        else:
+            ret, frame = cv2.VideoCapture("/dev/video10").read()
         if not ret:
             print("Failed to read from the webcam.")
             break
@@ -73,28 +77,9 @@ def readApriltag(tagID,dir):
         # 6. Process each detection
         #------------------------------------------------------------------
         for r in results:
-            print(r.tag_id, tagID)
             tag_id = r.tag_id
             if (tag_id == tagID):
                 corners = r.corners.astype(int)
-
-                #----------------------------------------
-                # 6b. Draw the detection on the image
-                #----------------------------------------
-                # Draw the outline of the tag
-                ### for i in range(4):
-                ###     cv2.line(
-                ###         undistorted,
-                ###         tuple(corners[i]),
-                ###         tuple(corners[(i+1) % 4]),
-                ###         (0, 255, 0),
-                ###         2
-                ###     )
-
-                # Draw the tag ID near the center
-                center_xy = (int(r.center[0]), int(r.center[1]))
-                ### cv2.putText(undistorted, f"ID: {tag_id}", center_xy,
-                ###             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
                 #----------------------------------------
                 # 6c. Get Pose (R, t)
@@ -104,19 +89,9 @@ def readApriltag(tagID,dir):
 
                 rot_vec, _ = cv2.Rodrigues(R)     # from rotation matrix to rotation vector
                 rot_deg = np.degrees(rot_vec)     # convert to degrees for display if desired
-
-                # print(f"Detected Tag ID {tag_id}:")
-                # print(f"  Translation (x, y, z) [m]: {t.ravel()}")
-
-                ### cv2.putText(undistorted, "X: " + str(round(float(t[0]),2)) + ", Y: " + str(round(float(t[1]),2)) + ", Z: " + str(round(float(t[2]),2)), corners[0], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                
                 return (round(float(t[0]),2), round(float(t[2]),2)) # Returns (x, z)
 
         ### cv2.imshow('AprilTag Detection', undistorted)
 
         return (9999,9999)
-        # Press 'q' to quit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
