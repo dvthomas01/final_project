@@ -1,13 +1,13 @@
 import time
 from common import Phase, Event #Phase: larger state machine, Event: feedback from sensor or esp
 from link import SerialLink #UART Wrapper
-from phases import  acquire_bin, setup#, transport_bin, drop_bin, return_home
+from phases import  acquire_Cbin, setup#, transport_bin, drop_bin, return_home
 
 
 #Dictionary where the key is a Phase enum value and the value is the class that runs that phase.
 PHASE_IMPLS = {
     Phase.SETUP:        setup.Setup,
-    Phase.ACQUIRE_BIN:  acquire_bin.AcquireBin,
+    Phase.ACQUIRE_CBIN:  acquire_Cbin.AcquireCBin,
     #Phase.TRANSPORT_BIN: transport_bin.TransportBin,
     #Phase.DROP_BIN:     drop_bin.DropBin,
     #Phase.RETURN_HOME:  return_home.ReturnHome,
@@ -18,7 +18,9 @@ class Controller:
 
     def __init__(self):
         self._link = SerialLink()
-        self._phase = Phase.SETUP
+        #self._phase = Phase.SETUP
+        self._phase = Phase.ACQUIRE_CBIN
+
         self._impl = PHASE_IMPLS[self._phase](self._link)
         self._impl.enter()
 

@@ -36,6 +36,11 @@
  
  // Shared IMU data from imu_reader.cpp
  extern struct euler_t { float yaw, pitch, roll; } ypr;
+
+// Wireless Comms Variables
+extern bool freshWirelessData;
+extern ControllerMessage controllerMessage;
+extern RobotMessage robotMessage;
  
  // ──────────────────────────────────────────────────────────────
  //  Helper‑functions – keep main loop skinny
@@ -65,12 +70,23 @@
             break;
         case ROTATE_CW:
             Serial.println("CW Running");
-            rotate(ctx.yaw0, ypr.yaw, ctx.arg);
+            // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             break;
         case APPROACH_PICKUP_POSE: 
             Serial.println("Driving Straight");
             driveStraight(1);
             break;
+        case ALIGN_F: 
+            Serial.println("Driving Straight");
+            driveStraight(1);
+            break;
+        case ALIGN_B: 
+            Serial.println("Driving Back");
+            driveStraight(-1);
+            break;
+        case GRAB_BIN: 
+            Serial.println("Grabbing Bin");
+            grabBin(); 
         /* TODO: plug in other command handlers here */
         case STOP:
             updateDriveSetpoints(0, 0);
@@ -111,7 +127,7 @@
      setupIMU();
      setupDrive();
      readIMU(false);
-    //  setupWireless();
+     setupWireless();
  
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
      mySerial.setTimeout(10);  // 10 ms timeout
@@ -123,7 +139,13 @@
  void loop() {
     readIMU(false);                // Always keep yaw fresh
 
-    static enum { WAITING, ACTIVE, FINISHED } state = WAITING;
+    static enum { WAITING, ACTIVE, FINISHED, JOYSTICK_INTERRUPT } state = WAITING;
+    if(checkJoystickInterrupt()){
+        state = JOYSTICK_INTERRUPT;
+    }
+
+    Serial.print("deboucnedINterrupt: ");
+    Serial.println(controllerMessage.debouncedInputF);
 
     switch (state) {
         case WAITING:
@@ -148,6 +170,11 @@
 
         case FINISHED:
             holdStill();
+            break;
+
+        case JOYSTICK_INTERRUPT:
+            // Joystick activated, swap to joystick mode
+            readJoystick();
             break;
     }
 

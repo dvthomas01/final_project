@@ -8,12 +8,15 @@
 
 #define BOUNCE_PIN1 8
 #define BOUNCE_PIN2 6
+#define BOUNCE_PIN3 12
 
-Bounce bounceF = Bounce();
-Bounce bounceR = Bounce();
+Bounce bounceF = Bounce(); //button to spin flywheels forward
+Bounce bounceR = Bounce(); //button to spin flywheels reverse
+Bounce bounceI = Bounce(); //button to interrupt autonomy with joystick control
 
-int dif = 1;
-int dir = 1;
+int dif = 1; //forward
+int dir = 1; //reverse
+int dii = 1; //interrupt
 
 
 ControllerMessage prevControllerMessage;
@@ -30,6 +33,7 @@ void setup() {
 
     bounceF.attach(BOUNCE_PIN1, INPUT_PULLUP);
     bounceR.attach(BOUNCE_PIN2, INPUT_PULLUP);
+    bounceI.attach(BOUNCE_PIN3, INPUT_PULLUP);
 
     Serial.println("Setup complete.");
 }
@@ -40,14 +44,18 @@ void loop() {
 
         bounceF.update();
         bounceR.update();
+        bounceI.update();
 
         dif = bounceF.read();
         dir = bounceR.read();
+        dii = bounceI.read();
 
         controllerMessage.millis = millis();
         controllerMessage.joystick1 = joystick1.read();
         controllerMessage.debouncedInputF = dif;
         controllerMessage.debouncedInputR = dir;
+        controllerMessage.debouncedInterrupt = dii;
+
         
         if (!(prevControllerMessage == controllerMessage)) {
             sendControllerData();

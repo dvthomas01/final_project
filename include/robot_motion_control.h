@@ -20,7 +20,8 @@ enum trajectoryMode {
 // Define enum of commands for JetsonComms
 enum commands {
     SETUP,
-    ALIGN,
+    ALIGN_F,
+    ALIGN_B,
     ROTATE_CW,
     ROTATE_CCW,
     FINE_ALIGN,
@@ -73,6 +74,14 @@ void grabBin();
 // Spit bin out from center cavity
 // Just spins flywheels such that bin is ejected for sufficient time (1 sec?)
 void depositBin();
+
+// Check if the override button on the controller has been pressed
+// If so, enter joystick mode, tell the jetson we're ignoring it
+bool checkJoystickInterrupt();
+
+
+// Now that we're in joystick mode, do the joystick code
+void readJoystick();
 
 // Setup function, determines what position (assoc. AprilTag ID) bins start in
 // Returns bin color order from left (index 0) to right (index 2) as char array
