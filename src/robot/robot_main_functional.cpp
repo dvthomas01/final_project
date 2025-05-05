@@ -88,9 +88,10 @@ extern RobotMessage robotMessage;
             Serial.println("Grabbing Bin");
             grabBin(); 
         /* TODO: plug in other command handlers here */
-        case STOP:
+        case STOP_DRIVE:
             updateDriveSetpoints(0, 0);
             mySerial.println("STOP");
+            Serial.println("Stop DRIVE");
             break;
         default:
             break;
@@ -104,6 +105,7 @@ extern RobotMessage robotMessage;
     String line = mySerial.readStringUntil('\n');
     Serial.println("commandComplete line: " +line);
     if (line.indexOf("STOP") >= 0) {
+        Serial.println("Sent Stop");
         mySerial.println("STOP"); 
     }
 
@@ -145,13 +147,15 @@ extern RobotMessage robotMessage;
         state = JOYSTICK_INTERRUPT;
     }
 
-    Serial.print("deboucnedINterrupt: ");
-    Serial.println(controllerMessage.debouncedInputF);
-
+    // Serial.print("deboucnedINterrupt: ");
+    // Serial.println(controllerMessage.debouncedInputF);
+    Serial.println(state);
     switch (state) {
         case WAITING:
             fetchJetsonCommand();
-            if (!ctx.done && ctx.cmd != NO_STATE_DETECTED) {
+            if (ctx.cmd == STOP_DRIVE)
+                mySerial.println("STOP");
+            if (!ctx.done && ctx.cmd != NO_STATE_DETECTED && ctx.cmd != STOP_DRIVE) {
                 state = ACTIVE;
                 Serial.println("In Waiting to Active transition");
             } 

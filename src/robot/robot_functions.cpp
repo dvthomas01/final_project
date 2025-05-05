@@ -116,7 +116,11 @@ jetsonOutput jetsonComms() {
         output.COMMAND = DRIVE_TO_PICKUP;
     } else if(input_parsed[0] == "FINISH") {
         output.COMMAND = FINISH;
-    } else {
+    } else if(input_parsed[0] == "STOP") {
+        output.COMMAND = STOP_DRIVE;
+    }
+    
+    else {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
     }
@@ -231,10 +235,6 @@ void driveStraight(int dir) {
 
     // Update drive setpoints
     updateDriveSetpoints(driveSpeed, driveSpeed);
-    updatePIDs();
-    delay(1000); //Temporary, this just provides a basic stop condition
-    updateDriveSetpoints(0,0);
-    updatePIDs();
     mySerial.println("DRIVING");
 
 }

@@ -43,9 +43,9 @@ void setWheelVelocities(float robotVelocity, float k){
 
 // Makes robot follow a trajectory
 void followTrajectory(trajectoryMode trajectory) {
-    if (trajectory == STOP){
-        setWheelVelocities(0, 0);
-    } 
+    // if (trajectory == STOP){
+    //     setWheelVelocities(0, 0);
+    // } 
 
     if (trajectory == FORWARD) {
         robotVelocity = 0.1;
