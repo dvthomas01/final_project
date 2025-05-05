@@ -31,7 +31,7 @@ def main():
     objp *= square_size
 
     # Open the default camera (device index 0)
-    cap = cv2.VideoCapture(3 ,cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture("/dev/video10")
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
