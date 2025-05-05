@@ -36,6 +36,11 @@
  
  // Shared IMU data from imu_reader.cpp
  extern struct euler_t { float yaw, pitch, roll; } ypr;
+
+// Wireless Comms Variables
+bool freshWirelessData = false;
+ControllerMessage controllerMessage;
+RobotMessage robotMessage;
  
  // ──────────────────────────────────────────────────────────────
  //  Helper‑functions – keep main loop skinny
@@ -111,7 +116,7 @@
      setupIMU();
      setupDrive();
      readIMU(false);
-    //  setupWireless();
+     setupWireless();
  
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
      mySerial.setTimeout(10);  // 10 ms timeout
@@ -123,7 +128,8 @@
  void loop() {
     readIMU(false);                // Always keep yaw fresh
 
-    static enum { WAITING, ACTIVE, FINISHED } state = WAITING;
+    static enum { WAITING, ACTIVE, FINISHED, JOYSTICK_INTERRUPT } state = WAITING;
+    checkJoystickInterrupt();
 
     switch (state) {
         case WAITING:
@@ -148,6 +154,10 @@
 
         case FINISHED:
             holdStill();
+            break;
+
+        case JOYSTICK_INTERRUPT:
+            // Joystick activated, swap to joystick mode
             break;
     }
 

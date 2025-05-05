@@ -19,6 +19,7 @@ struct ControllerMessage { //This struct is defined for a complex controller, bu
     TouchReading touchPoint;*/
     int debouncedInputF = 1; // Default to open
     int debouncedInputR = 1;
+    int debouncedInterrupt = 1;
 
     void print();
     bool operator==(const ControllerMessage& other);

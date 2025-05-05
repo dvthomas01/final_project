@@ -74,6 +74,10 @@ void grabBin();
 // Just spins flywheels such that bin is ejected for sufficient time (1 sec?)
 void depositBin();
 
+// Check if the override button on the controller has been pressed
+// If so, enter joystick mode, tell the jetson we're ignoring it
+void checkJoystickInterrupt();
+
 // Setup function, determines what position (assoc. AprilTag ID) bins start in
 // Returns bin color order from left (index 0) to right (index 2) as char array
 // b - blue, y - yellow, r - red

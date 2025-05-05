@@ -6,6 +6,8 @@
 #include "imu.h"
 #include "robot_motion_control.h"
 #include "RobotFunctions.h"
+#include "wireless.h"
+#include "util.h"
 
 // Rotate Variables
 
@@ -34,6 +36,14 @@ extern struct euler_t {
 
  // External UART Connection declaration
  extern HardwareSerial mySerial; // Use UART1
+
+// External Wireless Comms
+extern bool freshWirelessData = false;
+extern ControllerMessage controllerMessage;
+extern RobotMessage robotMessage;
+
+// External state machine state
+extern enum { WAITING, ACTIVE, FINISHED, JOYSTICK_INTERRUPT } state;
 
 jetsonOutput jetsonComms() {
     // declare output struct
@@ -119,6 +129,60 @@ jetsonOutput jetsonComms() {
     }
 
     return output;
+}
+
+void checkJoystickInterrupt() {
+    if (freshWirelessData && controllerMessage.debouncedInterrupt == 0) {
+        state = JOYSTICK_INTERRUPT;
+    }
+}
+
+// Now that we're in joystick mode, do the joystick code
+void readJoystick() {
+    EVERY_N_MILLIS(10) {
+        followJoystickTrajectory();
+        // we want to say if buttonF = 0 update setpoints for both to turn forwards
+        // if button R = 0 udpate setpoints for both to turn backwards
+        //otherwise setpoints stay 0
+        if(controllerMessage.debouncedInputF == 0){
+            updateFlywheelSetpoints(-2,-2);
+            if (Serial) Serial.println("Grabbing");
+        }
+        else if(controllerMessage.debouncedInputR == 0){
+            updateFlywheelSetpoints(2,2);
+            if (Serial) Serial.println("Spitting");
+        }
+        else{
+            updateFlywheelSetpoints(0,0);
+            if (Serial) Serial.println("Holding");
+        }
+    }
+
+    // Update PID at 200Hz
+    EVERY_N_MILLIS(5) {
+        updatePIDs();
+    }
+
+    // Send and print robot values at 50Hz
+    EVERY_N_MILLIS(20) {
+        updateOdometry();
+        sendRobotData();
+
+        Serial.printf("x: %.2f, y: %.2f, theta: %.2f\n",
+                    robotMessage.x, robotMessage.y, robotMessage.theta);
+    }
+}
+
+void followJoystickTrajectory() {
+    if (freshWirelessData) {
+        double forward = abs(controllerMessage.joystick1.y) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.y, -1, 1, -MAX_FORWARD/3, MAX_FORWARD/3);
+        double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
+        updateDriveSetpoints(forward + turn, forward - turn);
+        if (Serial) Serial.println("Driving");
+    
+    } else {
+        Serial.println("No Wireless Data");
+    }
 }
 
 void rotate(float initialYaw, float currentYaw, int dir)

@@ -173,20 +173,15 @@ void followTrajectory(trajectoryMode trajectory) {
 
 void updateOdometry() {
     // take angles from traction wheels only since they don't slip
-    currPhiL = encoders[2].getPosition();
-    currPhiR = -encoders[3].getPosition();
-    currTheta = ypr.yaw;
+    currPhiL = encoders[0].getPosition();
+    currPhiR = -encoders[1].getPosition();
     
     double dPhiL = currPhiL - prevPhiL;
     double dPhiR = currPhiR - prevPhiR;
-    double dtheta = currTheta - prevTheta;
     prevPhiL = currPhiL;
     prevPhiR = currPhiR;
-    prevTheta = currTheta;
 
-    // float dtheta = r/(2*b)*(dPhiR-dPhiL);
-    // float dx = r/2.0 * (cos(robotMessage.theta)*dPhiR + cos(robotMessage.theta)*dPhiL);
-    // float dy = r/2.0 * (sin(robotMessage.theta)*dPhiR + sin(robotMessage.theta)*dPhiL);
+    float dtheta = r/(2*b)*(dPhiR-dPhiL);
     float dx = r/2.0 * (cos(robotMessage.theta)*dPhiR + cos(robotMessage.theta)*dPhiL);
     float dy = r/2.0 * (sin(robotMessage.theta)*dPhiR + sin(robotMessage.theta)*dPhiL);
 

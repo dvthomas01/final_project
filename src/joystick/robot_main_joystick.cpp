@@ -44,6 +44,6 @@ void loop() {
 
         Serial.printf("x: %.2f, y: %.2f, theta: %.2f\n",
                     robotMessage.x, robotMessage.y, robotMessage.theta);
-            }
+    }
   
 }
