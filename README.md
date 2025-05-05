@@ -1,6 +1,7 @@
 # 2.12 Robot Navigation
 
 Mobile Robot Team Th 11-1
+
 This repository will host the navigation code and control systems for our 2.12 robot project.
 
 <details>
@@ -24,7 +25,7 @@ Upload the MR_1_controller environment to the ESP that controls the joystick and
 Follow the same steps from the robot to upload code to this ESP.
 The joystick must stay connected to power while in use. 
 
-Pressing the red button furthest from the ESP will put the robot from autonomous mode into manual control mode.
+Pressing the red button furthest from the ESP will switch the robot from autonomous mode into manual control mode.
 Once in manual control mode, the robot will be fully controlled by the joystick and buttons.
 
 The joystick controlls the driving wheels of the robot.
@@ -37,6 +38,9 @@ The red button directly above to the green button spins the flywheels to spit ou
 From the terminal, type the following commands in order to connect wirelessly to the Jetson Nano and run the appropriate file:
 
 ssh robot212@10.31.167.202
+
 Type password: admin
+
 cd Desktop/final_project/jetson/
-MR_1_jetson_main.py 
+
+MR_1_jetson_main.py   
