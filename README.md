@@ -37,6 +37,9 @@ The red button directly above to the green button spins the flywheels to spit ou
 From the terminal, type the following commands in order to connect wirelessly to the Jetson Nano and run the appropriate file:
 
 ssh robot212@10.31.167.202
+
 Type password: admin
+
 cd Desktop/final_project/jetson/
+
 MR_1_jetson_main.py   
