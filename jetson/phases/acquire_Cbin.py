@@ -33,7 +33,7 @@ class AcquireCBin:
         try: 
     	    with open(path, "r", encoding="utf-8") as f:
     	        vals = [float(x) for x in f.readline().strip().split()]
-    	        print (vals)
+    	        #print (vals)
     	        return vals if len(vals) == 4 else None
         except FileNotFoundError:
             return None
@@ -49,22 +49,23 @@ class AcquireCBin:
         if self._step == 0:
             pose = self.read_latest_pose()
             print ("hello from tick step 0")
-            print (pose)
+            #print (pose)
             if pose is None: 
             	return None
             dist = pose[2]
             print (dist)
             if abs(dist) < 0.05: 
-                print ("hell from abs")
+                #print ("hell from abs")
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 1
                 self._sent = True
+                return None
             if dist > 0: 
-                print ("hello from Align F")
+                #print ("hello from Align F")
                 self._link.enqueue(Command.ALIGN_F.value)
                 self._sent = True
             else: 
-                print ("hello from Align B")
+                #print ("hello from Align B")
                 self._link.enqueue(Command.ALIGN_B.value)
                 self._sent = True
             print("acquire_Cbin.py STEP 1. DIST TO 9: ", dist)
@@ -95,7 +96,12 @@ class AcquireCBin:
         
         if self._step == 4 and event:
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
-            if ap.readApriltag(7,False)[1] <0.5:
+            pose = self.read_latest_pose()
+            #print (pose)
+            if pose is None: 
+            	return None
+            dist = pose[1]
+            if dist<0.5:
             #if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 5
@@ -120,7 +126,16 @@ class AcquireCBin:
 
         
         if self._step == 7 and event and event.name =="GRAB_BIN": #TODO: is this correct. update the success of grab 
-            if abs (ap.readApriltag(7,True)[0])< 0.05 : 
+    
+        	
+            pose = self.read_latest_pose()
+            print ("hello from tick step 0")
+            #print (pose)
+            if pose is None: 
+            	return None
+            dist = pose[2]
+            print (dist)
+            if abs (dist)< 0.05 : 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 8
                 self._sent = True
