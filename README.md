@@ -1,6 +1,7 @@
 # 2.12 Robot Navigation
 
 Mobile Robot Team Th 11-1
+
 This repository will host the navigation code and control systems for our 2.12 robot project.
 
 <details>
