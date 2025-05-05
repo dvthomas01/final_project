@@ -25,7 +25,7 @@ Upload the MR_1_controller environment to the ESP that controls the joystick and
 Follow the same steps from the robot to upload code to this ESP.
 The joystick must stay connected to power while in use. 
 
-Pressing the red button furthest from the ESP will put the robot from autonomous mode into manual control mode.
+Pressing the red button furthest from the ESP will switch the robot from autonomous mode into manual control mode.
 Once in manual control mode, the robot will be fully controlled by the joystick and buttons.
 
 The joystick controlls the driving wheels of the robot.
