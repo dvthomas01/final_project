@@ -35,6 +35,7 @@ The joystick controls the drive wheels of the robot.
 The green button spins the flywheels to suck in bins.
 The red button next to the green button spins the flywheels to spit out the bins.
 
+Importantly, once in joystick mode, there is no way to return to autonomy without reseting the robot ESP and ctrl+c'ing and restarting the high-level code on the Jetson Nano.
 
 ## 3 Jetson
 
@@ -48,4 +49,4 @@ cd Desktop/final_project/jetson/
 
 MR_1_jetson_main.py
 
-Once the jetson is running, turning on motor poer (green button on motor chassis) will make the robot start moving and following the Jetson's commands.
+Once the jetson is running, turning on motor power (green button on motor chassis) will make the robot start moving and following the Jetson's commands.
