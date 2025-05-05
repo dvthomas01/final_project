@@ -1,11 +1,14 @@
 import cv2
 import numpy as np
 import pyapriltags as apriltag
+import os
 
 def readApriltag(tagID, dir):
     #----------------------------------------------------------------------
     # 1. Load camera calibration data
     #----------------------------------------------------------------------
+    print(os.path.abspath("."))
+
     calibration_data = np.load('camera_calibration_live_front.npz')  # adjust filename
     camera_matrix = calibration_data['camera_matrix']  # shape (3, 3)
     dist_coeffs = calibration_data['dist_coeffs']      # shape (n,) typically (5,) or (8,)
@@ -39,7 +42,7 @@ def readApriltag(tagID, dir):
     cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
     cap.set(cv2.CAP_PROP_FOCUS, 0)
     cap.set(cv2.CAP_PROP_FOURCC ,cv2.VideoWriter_fourcc('M', 'J', 'P', 'G') )
-    
+
     if not cap.isOpened():
         print("Error: Could not open webcam.")
         return
@@ -53,10 +56,10 @@ def readApriltag(tagID, dir):
             break
 
         undistorted = frame # This turns off the undistortion
-        
+
         # Convert to grayscale
         gray = cv2.cvtColor(undistorted, cv2.COLOR_BGR2GRAY)
-        
+
         results = at_detector.detect(
             gray,
             estimate_tag_pose=True,
@@ -108,7 +111,7 @@ def readApriltag(tagID, dir):
         cv2.imshow('AprilTag Detection', undistorted)
 
         return 9999
-        # Press 'q' to quit 
+        # Press 'q' to quit
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
