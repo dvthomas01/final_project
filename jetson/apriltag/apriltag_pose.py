@@ -6,7 +6,7 @@ def main():
     #----------------------------------------------------------------------
     # 1. Load camera calibration data
     #----------------------------------------------------------------------
-    calibration_data = np.load('camera_calibration_live.npz')  # adjust filename
+    calibration_data = np.load('camera_calibration_live_front.npz')  # adjust filename
     camera_matrix = calibration_data['camera_matrix']  # shape (3, 3)
     dist_coeffs = calibration_data['dist_coeffs']      # shape (n,) typically (5,) or (8,)
 
@@ -37,7 +37,7 @@ def main():
     #----------------------------------------------------------------------
     # 3. Initialize Webcam
     #----------------------------------------------------------------------
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture("/dev/video10") # OR "/dev/video4" (side camera)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
