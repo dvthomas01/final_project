@@ -146,7 +146,7 @@ void followJoystickTrajectory() {
     if (freshWirelessData) {
         double forward = abs(controllerMessage.joystick1.y) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.y, -1, 1, -MAX_FORWARD/3, MAX_FORWARD/3);
         double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
-        updateDriveSetpoints(forward + turn, forward - turn);
+        updateDriveSetpoints(.75*(forward + turn), .75*(forward - turn));
         if (Serial) Serial.println("Driving");
     
     } else {
