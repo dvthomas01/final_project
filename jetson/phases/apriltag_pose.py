@@ -21,7 +21,7 @@ def readApriltag(tagID,dir):
     #----------------------------------------------------------------------
     # 1. Load camera calibration data
     #----------------------------------------------------------------------
-    calibration_data = np.load('phases/camera_calibration_live_front.npz')  # adjust filename
+    calibration_data = np.load('phases/camera_calibration_live_right.npz')  # adjust filename
     camera_matrix = calibration_data['camera_matrix']  # shape (3, 3)
     dist_coeffs = calibration_data['dist_coeffs']      # shape (n,) typically (5,) or (8,)
 
@@ -84,11 +84,11 @@ def readApriltag(tagID,dir):
                 #----------------------------------------
                 # 6c. Get Pose (R, t)
                 #----------------------------------------
-                R = r.pose_R  # 3×3 rotation matrix
+                # R = r.pose_R  # 3×3 rotation matrix
                 t = r.pose_t  # 3×1 translation vector
 
-                rot_vec, _ = cv2.Rodrigues(R)     # from rotation matrix to rotation vector
-                rot_deg = np.degrees(rot_vec)     # convert to degrees for display if desired
+                # rot_vec, _ = cv2.Rodrigues(R)     # from rotation matrix to rotation vector
+                # rot_deg = np.degrees(rot_vec)     # convert to degrees for display if desired
                 
                 return (round(float(t[0]),2), round(float(t[2]),2)) # Returns (x, z)
 
