@@ -1,8 +1,7 @@
 # phases/acquire_bin.py
 from common import Phase, Command, Event
 from link import SerialLink
-from apriltag_pose import readApriltag
-
+from . import apriltag_pose as ap
 import time
 
 
@@ -13,7 +12,7 @@ class AcquireCBin:
     'ROTATE_DONE', then hand control back to the Controller so it can
     switch to Phase.FINISH (or whatever next phase you prefer).
     """
-
+ 
     def __init__(self, link: SerialLink):
         self._link = link
         self._sent = False          # True after we’ve issued the rotate
@@ -39,11 +38,11 @@ class AcquireCBin:
 
         # align using left camerea
         if self._step == 0 and not self._sent:
-            if abs (readApriltag(9,True)[0])< 0.05 : 
+            if abs (ap.readApriltag(9,True)[0])< 0.05 : 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 1
                 self._sent = True
-            if (readApriltag(9,True)[0])>0: 
+            if (ap.readApriltag(9,True)[0])>0: 
                 self._link.enqueue(Command.ALIGN_F.value)
                 self._sent = True
             else: 
@@ -76,7 +75,7 @@ class AcquireCBin:
         
         if self._step == 4 and event:
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
-            if readApriltag(7,False)[1] <0.5:
+            if ap.readApriltag(7,False)[1] <0.5:
             #if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 5
@@ -100,12 +99,12 @@ class AcquireCBin:
             print("setup.py STEP 7")
 
         
-        if self._step == 7 and event and event.name =="BIN_GRABBED": #TODO: is this correct. update the success of grab 
-            if abs (readApriltag(7,True)[0])< 0.05 : 
+        if self._step == 7 and event and event.name =="GRAB_BIN": #TODO: is this correct. update the success of grab 
+            if abs (ap.readApriltag(7,True)[0])< 0.05 : 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 8
                 self._sent = True
-            if (readApriltag(7,True)[0])>0: 
+            if (ap.readApriltag(7,True)[0])>0: 
                 self._link.enqueue(Command.ALIGN_F.value)
                 self._sent = True
             else: 
@@ -123,7 +122,7 @@ class AcquireCBin:
 
         if self._step ==  9 and event and event.name == "ROTATE_DONE":
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
-            if readApriltag(7,False)[1] <0.5:
+            if ap.readApriltag(7,False)[1] <0.5:
             #if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 10
@@ -133,17 +132,12 @@ class AcquireCBin:
             print("setup.py STEP 10")
             return None   
         
-        if self._step == 10: 
-            self._link.enqueue(Command.STOP.value)  
-            self._step = 11
-            self._sent = True
-            print("acquire_Cbin.py STEP 2")
-   
-        if self._step ==  11 and event and event.name == "STOP": 
+        
+        if self._step ==  10 and event: 
             self._link.enqueue(Command.DEPOSIT_BIN.value) 
             if time.monotonic() - self._t0 >= self._depositduration:
                 self._link.enqueue(Command.STOP.value) 
-                self._step = 12
+                self._step = 11
                 self._sent = True
                 return None
             self._sent = True
@@ -151,6 +145,6 @@ class AcquireCBin:
             return None   
 
         
-        if self._step == 12 and event and event.name == "STOP":
+        if self._step == 11 and event and event.name == "STOP":
             return Phase.FINISH        
 
