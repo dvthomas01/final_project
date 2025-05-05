@@ -14,9 +14,9 @@
  #include "robot_pinout.h"
  #include "wireless.h"
  #include "util.h"
- 
+
  HardwareSerial mySerial(1);               // UART1: RX = 44, TX = 43
- 
+
  // ──────────────────────────────────────────────────────────────
  //  Small helper that tracks everything we need while a command
  //  is executing. We give it an explicit constructor so the line
@@ -31,9 +31,9 @@
     CommandCtx() : cmd(NO_STATE_DETECTED), arg(0), yaw0(0), done(true) {}
     CommandCtx(commands c, int a, float y) : cmd(c), arg(a), yaw0(y), done(false) {}
  };
- 
+
  static CommandCtx ctx;           // current command context
- 
+
  // Shared IMU data from imu_reader.cpp
  extern struct euler_t { float yaw, pitch, roll; } ypr;
 
@@ -41,7 +41,7 @@
 extern bool freshWirelessData;
 extern ControllerMessage controllerMessage;
 extern RobotMessage robotMessage;
- 
+
  // ──────────────────────────────────────────────────────────────
  //  Helper‑functions – keep main loop skinny
  // ──────────────────────────────────────────────────────────────
@@ -50,7 +50,7 @@ extern RobotMessage robotMessage;
     updateDriveSetpoints(0, 0);
     updatePIDs();
  }
- 
+
  static void fetchJetsonCommand() {
     jetsonOutput out = jetsonComms();  // blocks ~5 ms
     if (out.COMMAND == FINISH) {
@@ -61,7 +61,7 @@ extern RobotMessage robotMessage;
         ctx = CommandCtx(out.COMMAND, out.INPUT_VAL, ypr.yaw);
     }
  }
- 
+
  static void executeCommand() {
     switch (ctx.cmd) {
         case ROTATE_CCW:
@@ -72,21 +72,24 @@ extern RobotMessage robotMessage;
             Serial.println("CW Running");
             // rotate(ctx.yaw0, ypr.yaw, ctx.arg);
             break;
-        case APPROACH_PICKUP_POSE: 
+        case APPROACH_PICKUP_POSE:
             Serial.println("Driving Straight");
             driveStraight(1);
             break;
-        case ALIGN_F: 
+        case ALIGN_F:
             Serial.println("Driving Straight");
             driveStraight(1);
             break;
-        case ALIGN_B: 
+        case ALIGN_B:
             Serial.println("Driving Back");
             driveStraight(-1);
             break;
-        case GRAB_BIN: 
+        case GRAB_BIN:
             Serial.println("Grabbing Bin");
-            grabBin(); 
+            grabBin();
+        case DEPOSIT_BIN:
+            Serial.println("Depositing bin");
+            depositBin();
         /* TODO: plug in other command handlers here */
         case STOP_DRIVE:
             updateDriveSetpoints(0, 0);
@@ -97,7 +100,7 @@ extern RobotMessage robotMessage;
             break;
      }
  }
- 
+
  static bool commandComplete() {
     // Currently the only long‑running command is ROTATE_*, which tells us it’s
     // done by printing "ROTATE_DONE" on USB Serial.
@@ -106,7 +109,7 @@ extern RobotMessage robotMessage;
     Serial.println("commandComplete line: " +line);
     if (line.indexOf("STOP") >= 0) {
         Serial.println("Sent Stop");
-        mySerial.println("STOP"); 
+        mySerial.println("STOP");
     }
 
     return line.indexOf("STOP") >= 0;
@@ -118,11 +121,11 @@ extern RobotMessage robotMessage;
     }
     if (ctx.cmd == APPROACH_PICKUP_POSE) {
         String line = mySerial.readStringUntil('\n');
-        return line.indexOf("STRAIGHT_DONE") >= 0; 
+        return line.indexOf("STRAIGHT_DONE") >= 0;
     }
     return false;*/
  }
- 
+
  // ──────────────────────────────────────────────────────────────
  //  Arduino lifecycle
  // ──────────────────────────────────────────────────────────────
@@ -131,14 +134,14 @@ extern RobotMessage robotMessage;
      setupDrive();
      readIMU(false);
      setupWireless();
- 
+
      mySerial.begin(115200, SERIAL_8N1, 44, 43); // Jetson UART
      mySerial.setTimeout(10);  // 10 ms timeout
      Serial.begin(115200);                      // USB debug
      Serial.println("ESP32‑S3 ready");
      pinMode(LIMIT_SWITCH_PIN, INPUT_PULLUP); // Set limit switch pin to pullup mode
  }
- 
+
  void loop() {
     readIMU(false);                // Always keep yaw fresh
 
@@ -158,7 +161,7 @@ extern RobotMessage robotMessage;
             if (!ctx.done && ctx.cmd != NO_STATE_DETECTED && ctx.cmd != STOP_DRIVE) {
                 state = ACTIVE;
                 Serial.println("In Waiting to Active transition");
-            } 
+            }
             break;
 
         case ACTIVE:
@@ -186,4 +189,3 @@ extern RobotMessage robotMessage;
     EVERY_N_MILLIS(5) { updatePIDs(); }
     delay(10);   // relieve the watchdog
  }
- 

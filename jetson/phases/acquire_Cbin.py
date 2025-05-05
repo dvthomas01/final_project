@@ -162,15 +162,17 @@ class AcquireCBin:
             self._link.enqueue(Command.ROTATE_CCW.value)
             self._sent = True
             self._step = 10
+            self._t0 = time.monotonic()
             print("acquire_Cbin.py STEP 10")
             return None
 
         if self._step ==  10 and event and event.name == "ROTATE_DONE":
+            if time.monotonic() - self._t0 < 1:
+                return None
             pose = self.read_latest_pose()
             dist = pose[1]
             self._link.enqueue(Command.APPROACH_PICKUP.value)
             if dist < 0.5:
-            #if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value)
                 self._step = 11
                 self._sent = True
@@ -180,18 +182,25 @@ class AcquireCBin:
             print("setup.py STEP 11")
             return None
 
-
-        if self._step ==  11 and event:
-            self._link.enqueue(Command.DEPOSIT_BIN.value)
-            if time.monotonic() - self._t0 >= self._depositduration:
-                self._link.enqueue(Command.STOP.value)
-                self._step = 12
-                self._sent = True
-                return None
+        if self._step == 11:
+            self._link.enqueue(Command.STOP.value)
+            self._step = 12
             self._sent = True
             print("setup.py STEP 12")
             return None
 
 
-        if self._step == 12 and event and event.name == "STOP":
+        if self._step ==  12 and event and event.name == "STOP":
+            self._link.enqueue(Command.DEPOSIT_BIN.value)
+            if time.monotonic() - self._t0 >= self._depositduration:
+                self._link.enqueue(Command.STOP.value)
+                self._step = 13
+                self._sent = True
+                return None
+            self._sent = True
+            print("setup.py STEP 13")
+            return None
+
+
+        if self._step == 13 and event and event.name == "STOP":
             return Phase.FINISH
