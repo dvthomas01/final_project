@@ -35,7 +35,7 @@ class AcquireCBin:
     # Otherwise return None so the controller keeps us active.
     # ---------------------------------------------------------------
     def tick(self, event: Event | None) -> Phase | None:
-
+        print(ap.readApriltag(9,True))
         # align using left camerea
         if self._step == 0 and not self._sent:
             if abs (ap.readApriltag(9,True)[0])< 0.05 : 
@@ -49,7 +49,6 @@ class AcquireCBin:
                 self._link.enqueue(Command.ALIGN_B.value)
                 self._sent = True
             print("acquire_Cbin.py STEP 1")
-            print(ap.readApriltag(9,True))
             return None
         if self._step == 1: 
             self._link.enqueue(Command.STOP.value)  
