@@ -55,6 +55,7 @@ void loop() {
         controllerMessage.debouncedInputF = dif;
         controllerMessage.debouncedInputR = dir;
         controllerMessage.debouncedInterrupt = dii;
+
         
         if (!(prevControllerMessage == controllerMessage)) {
             sendControllerData();

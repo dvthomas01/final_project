@@ -87,9 +87,6 @@ extern RobotMessage robotMessage;
         case GRAB_BIN: 
             Serial.println("Grabbing Bin");
             grabBin(); 
-        case GRAB_BIN: 
-            Serial.println("Grabbing Bin");
-            grabBin(); 
         /* TODO: plug in other command handlers here */
         case STOP:
             updateDriveSetpoints(0, 0);
@@ -146,6 +143,9 @@ extern RobotMessage robotMessage;
     if(checkJoystickInterrupt()){
         state = JOYSTICK_INTERRUPT;
     }
+
+    Serial.print("deboucnedINterrupt: ");
+    Serial.println(controllerMessage.debouncedInputF);
 
     switch (state) {
         case WAITING:

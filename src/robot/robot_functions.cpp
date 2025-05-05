@@ -132,11 +132,13 @@ jetsonOutput jetsonComms() {
 }
 
 bool checkJoystickInterrupt() {
-    if (freshWirelessData && controllerMessage.debouncedInterrupt == 0) {
+    if (freshWirelessData && (controllerMessage.debouncedInterrupt == 0)) {
         Serial.println("INTERRUPT TRIGGERED");
         return true;
+    }else{
+        return false;
     }
-    return false;
+    
 }
 
 // Joystick helper function
