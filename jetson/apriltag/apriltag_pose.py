@@ -1,13 +1,11 @@
 import cv2
 import numpy as np
 import pyapriltags as apriltag
-import os
 
 def readApriltag(tagID, dir):
     #----------------------------------------------------------------------
     # 1. Load camera calibration data
     #----------------------------------------------------------------------
-    print(os.path.abspath("."))
 
     calibration_data = np.load('camera_calibration_live_front.npz')  # adjust filename
     camera_matrix = calibration_data['camera_matrix']  # shape (3, 3)

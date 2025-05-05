@@ -1,12 +1,15 @@
 from controller import Controller
 from common import Phase
 import time
+import os
+print(os.path.abspath("."))
+
 
 ctrl = Controller()
 print("Jetson FSM running – Ctrl‑C to quit")
 
 try:
-    while ctrl.phase is not Phase.FINISH:      
+    while ctrl.phase is not Phase.FINISH:
         t0 = time.monotonic()
         ctrl.tick()
         #print(Controller.PERIOD - (time.monotonic() - t0))
