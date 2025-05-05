@@ -119,7 +119,7 @@ jetsonOutput jetsonComms() {
     } else if(input_parsed[0] == "STOP") {
         output.COMMAND = STOP_DRIVE;
     }
-    
+
     else {
         Serial.println("Unknown Command: " + input_parsed[0]);
         output.COMMAND = NO_STATE_DETECTED;
@@ -142,7 +142,7 @@ bool checkJoystickInterrupt() {
     }else{
         return false;
     }
-    
+
 }
 
 // Joystick helper function
@@ -152,7 +152,7 @@ void followJoystickTrajectory() {
         double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
         updateDriveSetpoints(.75*(forward + turn), .75*(forward - turn));
         if (Serial) Serial.println("Driving");
-    
+
     } else {
         Serial.println("No Wireless Data");
     }
@@ -230,7 +230,7 @@ void rotate(float initialYaw, float currentYaw, int dir)
 
 void driveStraight(int dir) {
     Serial.println("driveStraight");
-    double driveSpeed = .75;
+    double driveSpeed = .6;
     driveSpeed *= dir; // If driving backwards, flip drive vel
 
     // Update drive setpoints
