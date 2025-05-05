@@ -8,7 +8,8 @@ MSG_TERMINATOR = "\n"          # keep it human‑readable
 class Command(str, Enum):
     # keep names identical to ESP enum
     SETUP = "SETUP"
-    ALIGN = "ALIGN"
+    ALIGN_F= "ALIGN,1"
+    ALIGN_B = "ALIGN,-1"
     ROTATE_CW = "ROTATE,1"
     ROTATE_CCW = "ROTATE,-1"
     FINE_ALIGN = "F_ALIGN"
@@ -26,7 +27,10 @@ class Command(str, Enum):
 
 class Phase(Enum):
     SETUP = auto()
-    ACQUIRE_BIN = auto()
+    ACQUIRE_CBIN = auto()
+    ACQUIRE_RBIN = auto()
+    ACQUIRE_YBIN = auto()
+    ACQUIRE_BBIN = auto()
     TRANSPORT_BIN = auto()
     DROP_BIN = auto()
     RETURN_HOME = auto()

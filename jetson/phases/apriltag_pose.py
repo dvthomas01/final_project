@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pyapriltags as apriltag
 
-def readApriltag(tagID):
+def readApriltag(tagID,dir):
     #----------------------------------------------------------------------
     # 1. Load camera calibration data
     #----------------------------------------------------------------------
@@ -33,7 +33,12 @@ def readApriltag(tagID):
     #----------------------------------------------------------------------
     # 3. Initialize Webcam
     #----------------------------------------------------------------------
-    cap = cv2.VideoCapture("/dev/video10") # OR "/dev/video4" (side camera)
+    cap = cv2.VideoCapture("/dev/video10") 
+    if dir: 
+        cap = cv2.VideoCapture("/dev/video4")
+    
+
+    #cap = cv2.VideoCapture("/dev/video10") # OR "/dev/video4" (side camera)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
