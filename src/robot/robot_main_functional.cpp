@@ -90,6 +90,7 @@ extern RobotMessage robotMessage;
         /* TODO: plug in other command handlers here */
         case STOP:
             updateDriveSetpoints(0, 0);
+            mySerial.println("STOP");
             break;
         default:
             break;
