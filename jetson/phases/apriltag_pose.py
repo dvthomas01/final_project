@@ -112,7 +112,7 @@ def readApriltag(tagID,dir):
 
         cv2.imshow('AprilTag Detection', undistorted)
 
-        return 9999
+        return (9999,9999)
         # Press 'q' to quit 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
