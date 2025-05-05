@@ -31,7 +31,7 @@ def main():
     objp *= square_size
 
     # Open the default camera (device index 0)
-    cap = cv2.VideoCapture("/dev/video10")
+    cap = cv2.VideoCapture(3 ,cv2.CAP_DSHOW)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
@@ -58,7 +58,13 @@ def main():
         # Attempt to find corners
         found, corners = cv2.findChessboardCorners(gray, chessboard_size, None)
         
+        # If found, refine and draw the corners
+        if found:
+            cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+            cv2.drawChessboardCorners(frame, chessboard_size, corners, found)
+
         # Show the live feed
+        cv2.imshow('Calibration - Live Feed', frame)
         key = cv2.waitKey(1) & 0xFF
         
         if key == ord('q'):
