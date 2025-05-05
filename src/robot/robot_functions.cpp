@@ -20,7 +20,7 @@ float alignSpeed = 1;
 // Box Collection Variables
 float distToPickUp = 46382537298543432; // MEASURE
 float driveUpSpeed = 1;
-double flywheelSpeed = .75;
+double flywheelSpeed = .5;
 
 // Box Drop Off Variables
 float distToDropOff = 35854392574232102; // MEASURE
