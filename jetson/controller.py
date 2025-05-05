@@ -63,6 +63,8 @@ class Controller:
                 return Event("ROTATE_DONE")
             if line == "DRIVING":
                 return Event("DRIVING")
+            if line == "STOP":
+                return Event("STOP")
             #TODO: add more
         return None
         

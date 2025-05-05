@@ -53,10 +53,17 @@ class Setup:
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
             if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
+                self._step = 3 
                 self._sent = True
-                return Command.FINISH
+                return None
             self._sent = True
             print("setup.py STEP 3")
             return None   
-                   
-        return None
+        if self._step == 3: 
+            self._link.enqueue(Command.STOP.value)  
+            self._step = 4
+            self._sent = True
+            return None
+        if self._step == 4 and event and event.name == "STOP":
+            return Phase.FINISH        
+
