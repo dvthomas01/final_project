@@ -37,7 +37,7 @@ class AcquireCBin:
     def tick(self, event: Event | None) -> Phase | None:
         print(ap.readApriltag(9,True))
         # align using left camerea
-        if self._step == 0 and not self._sent:
+        if self._step == 0:
             if abs (ap.readApriltag(9,True)[0])< 0.05 : 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 1

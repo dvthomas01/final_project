@@ -73,6 +73,7 @@ def readApriltag(tagID,dir):
         # 6. Process each detection
         #------------------------------------------------------------------
         for r in results:
+            print(r.tag_id, tagID)
             tag_id = r.tag_id
             if (tag_id == tagID):
                 corners = r.corners.astype(int)
