@@ -1,7 +1,7 @@
 # phases/setup.py
 from common import Phase, Command, Event
 from link import SerialLink
-#from apriltag_pose import readApriltag
+from . import apriltag_pose as ap
 
 import time
 
@@ -53,7 +53,7 @@ class Setup:
         
         if self._step == 2 and event:
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
-            if readApriltag(7)[1] <0.5:
+            if ap.readApriltag(7)[1] <0.5:
             #if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 3 
