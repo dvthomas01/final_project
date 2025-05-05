@@ -76,7 +76,11 @@ void depositBin();
 
 // Check if the override button on the controller has been pressed
 // If so, enter joystick mode, tell the jetson we're ignoring it
-void checkJoystickInterrupt();
+bool checkJoystickInterrupt();
+
+
+// Now that we're in joystick mode, do the joystick code
+void readJoystick();
 
 // Setup function, determines what position (assoc. AprilTag ID) bins start in
 // Returns bin color order from left (index 0) to right (index 2) as char array

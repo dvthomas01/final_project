@@ -38,7 +38,7 @@ extern struct euler_t {
  extern HardwareSerial mySerial; // Use UART1
 
 // External Wireless Comms
-extern bool freshWirelessData = false;
+extern bool freshWirelessData;
 extern ControllerMessage controllerMessage;
 extern RobotMessage robotMessage;
 
@@ -131,13 +131,26 @@ jetsonOutput jetsonComms() {
     return output;
 }
 
-void checkJoystickInterrupt() {
+bool checkJoystickInterrupt() {
     if (freshWirelessData && controllerMessage.debouncedInterrupt == 0) {
-        state = JOYSTICK_INTERRUPT;
+        return true;
+    }
+    return false;
+}
+
+// Joystick helper function
+void followJoystickTrajectory() {
+    if (freshWirelessData) {
+        double forward = abs(controllerMessage.joystick1.y) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.y, -1, 1, -MAX_FORWARD/3, MAX_FORWARD/3);
+        double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
+        updateDriveSetpoints(forward + turn, forward - turn);
+        if (Serial) Serial.println("Driving");
+    
+    } else {
+        Serial.println("No Wireless Data");
     }
 }
 
-// Now that we're in joystick mode, do the joystick code
 void readJoystick() {
     EVERY_N_MILLIS(10) {
         followJoystickTrajectory();
@@ -173,17 +186,6 @@ void readJoystick() {
     }
 }
 
-void followJoystickTrajectory() {
-    if (freshWirelessData) {
-        double forward = abs(controllerMessage.joystick1.y) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.y, -1, 1, -MAX_FORWARD/3, MAX_FORWARD/3);
-        double turn = abs(controllerMessage.joystick1.x) < 0.1 ? 0 : mapDouble(controllerMessage.joystick1.x, -1, 1, -MAX_TURN, MAX_TURN);
-        updateDriveSetpoints(forward + turn, forward - turn);
-        if (Serial) Serial.println("Driving");
-    
-    } else {
-        Serial.println("No Wireless Data");
-    }
-}
 
 void rotate(float initialYaw, float currentYaw, int dir)
 /* dir =  1  → clockwise  (ROTATE_CW)

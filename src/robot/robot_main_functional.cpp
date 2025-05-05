@@ -38,9 +38,9 @@
  extern struct euler_t { float yaw, pitch, roll; } ypr;
 
 // Wireless Comms Variables
-bool freshWirelessData = false;
-ControllerMessage controllerMessage;
-RobotMessage robotMessage;
+extern bool freshWirelessData;
+extern ControllerMessage controllerMessage;
+extern RobotMessage robotMessage;
  
  // ──────────────────────────────────────────────────────────────
  //  Helper‑functions – keep main loop skinny
@@ -129,7 +129,9 @@ RobotMessage robotMessage;
     readIMU(false);                // Always keep yaw fresh
 
     static enum { WAITING, ACTIVE, FINISHED, JOYSTICK_INTERRUPT } state = WAITING;
-    checkJoystickInterrupt();
+    if(checkJoystickInterrupt()){
+        state = JOYSTICK_INTERRUPT;
+    }
 
     switch (state) {
         case WAITING:
@@ -158,6 +160,7 @@ RobotMessage robotMessage;
 
         case JOYSTICK_INTERRUPT:
             // Joystick activated, swap to joystick mode
+            readJoystick();
             break;
     }
 
