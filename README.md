@@ -15,27 +15,30 @@ This repository will host the navigation code and control systems for our 2.12 r
 
 ## 1 Robot
 
-Upload the MR_1_robot environment to the ESP on the robot chassis.
-Do this by putting the ESP in to upload mode, uploading the code, and then pressing the reset button on the ESP.
-Once the code has been uploaded, disconnect the computer from the ESP.
+Upload the MR_1_robot environment to the ESP on the robot.
+To do this:
+  1. Put the ESP in to upload mode
+  2. Upload the code
+  3. Press the reset button on the ESP.
+Once the code has been uploaded, disconnect the computer from the ESP. The board power (red button on robot chassis) can now be turned on.
 
 ## 2 Controller
 
-Upload the MR_1_controller environment to the ESP that controls the joystick and buttons.
-Follow the same steps from the robot to upload code to this ESP.
+Upload the MR_1_controller environment to the ESP on the controller.
+Follow the same steps as the robot to upload code to this ESP.
 The joystick must stay connected to power while in use. 
 
 Pressing the red button furthest from the ESP will switch the robot from autonomous mode into manual control mode.
 Once in manual control mode, the robot will be fully controlled by the joystick and buttons.
 
-The joystick controlls the driving wheels of the robot.
-The green button spins the flywheels to suck in the bins.
-The red button directly above to the green button spins the flywheels to spit out the bins.
+The joystick controls the drive wheels of the robot.
+The green button spins the flywheels to suck in bins.
+The red button next to the green button spins the flywheels to spit out the bins.
 
 
 ## 3 Jetson
 
-From the terminal, type the following commands in order to connect wirelessly to the Jetson Nano and run the appropriate file:
+From a terminal, type the following commands in order to connect wirelessly to the Jetson Nano and run the appropriate file:
 
 ssh robot212@10.31.167.202
 
@@ -43,4 +46,6 @@ Type password: admin
 
 cd Desktop/final_project/jetson/
 
-MR_1_jetson_main.py   
+MR_1_jetson_main.py
+
+Once the jetson is running, turning on motor poer (green button on motor chassis) will make the robot start moving and following the Jetson's commands.
