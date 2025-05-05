@@ -18,8 +18,8 @@ class Controller:
 
     def __init__(self):
         self._link = SerialLink()
-        #self._phase = Phase.SETUP
-        self._phase = Phase.ACQUIRE_CBIN
+        self._phase = Phase.SETUP
+        #self._phase = Phase.ACQUIRE_CBIN
 
         self._impl = PHASE_IMPLS[self._phase](self._link)
         self._impl.enter()
