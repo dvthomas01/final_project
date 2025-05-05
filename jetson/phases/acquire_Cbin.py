@@ -49,6 +49,7 @@ class AcquireCBin:
                 self._link.enqueue(Command.ALIGN_B.value)
                 self._sent = True
             print("acquire_Cbin.py STEP 1")
+            print(ap.readApriltag(9,True))
             return None
         if self._step == 1: 
             self._link.enqueue(Command.STOP.value)  
