@@ -1,9 +1,6 @@
 from controller import Controller
 from common import Phase
 import time
-import os
-print(os.path.abspath("."))
-
 
 ctrl = Controller()
 print("Jetson FSM running – Ctrl‑C to quit")

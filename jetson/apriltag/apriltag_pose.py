@@ -7,7 +7,7 @@ def readApriltag(tagID, dir):
     # 1. Load camera calibration data
     #----------------------------------------------------------------------
 
-    calibration_data = np.load('apriltag\camera_calibration_live_front.npz')  # adjust filename
+    calibration_data = np.load('camera_calibration_live_front.npz')  # adjust filename
     camera_matrix = calibration_data['camera_matrix']  # shape (3, 3)
     dist_coeffs = calibration_data['dist_coeffs']      # shape (n,) typically (5,) or (8,)
 
