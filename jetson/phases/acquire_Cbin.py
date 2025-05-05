@@ -28,6 +28,15 @@ class AcquireCBin:
     def enter(self) -> None:
         self._sent = False
         self._step = 0
+    def read_latest_pose(self,path="../pose_values.txt"):
+    #Returns (front_x, front_z, side_x, side_z) or None if unavailable."""
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                vals = [float(x) for x in f.readline().strip().split()]
+                return vals if len(vals) == 4 else None
+        except FileNotFoundError:
+            return None
+
 
     # ---------------------------------------------------------------
     # Controller calls tick(event) every 50 ms.
@@ -37,7 +46,10 @@ class AcquireCBin:
     def tick(self, event: Event | None) -> Phase | None:
         # align using left camerea
         if self._step == 0:
-            dist = ap.readApriltag(9,True)[0]
+            pose = self.read_latest_pose()
+            if pose is None: 
+            	return None
+            dist = pose[2]
             if abs(dist) < 0.05: 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 1
