@@ -1,7 +1,7 @@
 # phases/setup.py
 from common import Phase, Command, Event
 from link import SerialLink
-from apriltag_pose import readApriltag
+#from apriltag_pose import readApriltag
 
 import time
 
