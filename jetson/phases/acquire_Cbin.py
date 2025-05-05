@@ -51,7 +51,7 @@ class AcquireCBin:
             print ("hello from tick step 0")
             #print (pose)
             if pose is None: 
-            	return None
+            	pose = [0, 0, 9999, 0]
             dist = pose[2]
             print (dist)
             if abs(dist) < 0.05: 
@@ -123,30 +123,33 @@ class AcquireCBin:
             self._step = 7
             self._sent = True
             print("setup.py STEP 7")
-
+	
         
-        if self._step == 7 and event and event.name =="GRAB_BIN": #TODO: is this correct. update the success of grab 
+        if self._step == 7 and event and event.name =="BIN_GRABBED": #TODO: is this correct. update the success of grab 
     
         	
             pose = self.read_latest_pose()
-            print ("hello from tick step 0")
+            print ("hello from tick step 7")
             #print (pose)
             if pose is None: 
-            	return None
+            	pose = [0, 0, -9999, 0]
             dist = pose[2]
             print (dist)
             if abs (dist)< 0.05 : 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 8
                 self._sent = True
-            if (ap.readApriltag(7,True)[0])>0: 
+                print("acquire_Cbin.py STEP 8")
+                return None
+            if (dist)>0: 
                 self._link.enqueue(Command.ALIGN_F.value)
                 self._sent = True
+                return None
             else: 
                 self._link.enqueue(Command.ALIGN_B.value)
                 self._sent = True
-            print("acquire_Cbin.py STEP 8")
-            return None
+                return None
+
         
         if self._step == 8 and event and event.name == "STOP":
             self._link.enqueue(Command.ROTATE_CCW.value) 
@@ -156,12 +159,15 @@ class AcquireCBin:
             return None
 
         if self._step ==  9 and event and event.name == "ROTATE_DONE":
+            pose = self.read_latest_pose()
+            dist = pose[1]
             self._link.enqueue(Command.APPROACH_PICKUP.value) 
-            if ap.readApriltag(7,False)[1] <0.5:
+            if dist < 0.5:
             #if time.monotonic() - self._t0 >= self._driveduration:
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 10
                 self._sent = True
+                self._t0 = time.monotonic()
                 return None
             self._sent = True
             print("setup.py STEP 10")

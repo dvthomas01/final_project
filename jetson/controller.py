@@ -67,7 +67,8 @@ class Controller:
                 return Event("DRIVING")
             if line == "STOP":
                 return Event("STOP")
-            #TODO: add more
+            if line == "BIN_GRABBED":
+                return Event("BIN_GRABBED")
         return None
         
     @property
