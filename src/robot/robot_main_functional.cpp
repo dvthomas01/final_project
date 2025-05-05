@@ -76,6 +76,20 @@ extern RobotMessage robotMessage;
             Serial.println("Driving Straight");
             driveStraight(1);
             break;
+        case ALIGN_F: 
+            Serial.println("Driving Straight");
+            driveStraight(1);
+            break;
+        case ALIGN_B: 
+            Serial.println("Driving Back");
+            driveStraight(-1);
+            break;
+        case GRAB_BIN: 
+            Serial.println("Grabbing Bin");
+            grabBin(); 
+        case GRAB_BIN: 
+            Serial.println("Grabbing Bin");
+            grabBin(); 
         /* TODO: plug in other command handlers here */
         case STOP:
             updateDriveSetpoints(0, 0);

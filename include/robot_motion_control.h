@@ -20,7 +20,8 @@ enum trajectoryMode {
 // Define enum of commands for JetsonComms
 enum commands {
     SETUP,
-    ALIGN,
+    ALIGN_F,
+    ALIGN_B,
     ROTATE_CW,
     ROTATE_CCW,
     FINE_ALIGN,

@@ -86,14 +86,14 @@ jetsonOutput jetsonComms() {
     input_parsed[0].toUpperCase(); // Ensure command is same case
     if(input_parsed[0] == "SETUP") {
         output.COMMAND = SETUP;
-    } else if(input_parsed[0] == "ALIGN"){
-        output.COMMAND = ALIGN;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==-1){
         output.COMMAND = ROTATE_CCW;
     } else if(input_parsed[0] == "ROTATE" && input_val_int==1){
         output.COMMAND = ROTATE_CW;
-    } else if(input_parsed[0] == "F_ALIGN"){
-        output.COMMAND = FINE_ALIGN;
+    } else if(input_parsed[0] == "ALIGN_F"){
+        output.COMMAND = ALIGN_F;
+    } else if(input_parsed[0] == "ALIGN_B"){
+        output.COMMAND = ALIGN_B;
     } else if(input_parsed[0] == "A_PICKUP"){
         output.COMMAND = APPROACH_PICKUP_POSE;
     } else if(input_parsed[0] == "G_BIN"){
@@ -250,6 +250,8 @@ void grabBin() {
 
     // Switch Closed
     updateFlywheelSetpoints(0, 0);
+    mySerial.println("BIN_GRABBED");
+
 }
 
 void depositBin() {

@@ -100,7 +100,7 @@ class AcquireCBin:
             print("setup.py STEP 7")
 
         
-        if self._step == 7 and event and event.name =="GRAB_BIN": #TODO: is this correct. update the success of grab 
+        if self._step == 7 and event and event.name =="BIN_GRABBED": #TODO: is this correct. update the success of grab 
             if abs (readApriltag(7,True)[0])< 0.05 : 
                 self._link.enqueue(Command.STOP.value) 
                 self._step = 8
@@ -133,12 +133,17 @@ class AcquireCBin:
             print("setup.py STEP 10")
             return None   
         
-        
-        if self._step ==  10 and event: 
+        if self._step == 10: 
+            self._link.enqueue(Command.STOP.value)  
+            self._step = 11
+            self._sent = True
+            print("acquire_Cbin.py STEP 2")
+   
+        if self._step ==  11 and event and event.name == "STOP": 
             self._link.enqueue(Command.DEPOSIT_BIN.value) 
             if time.monotonic() - self._t0 >= self._depositduration:
                 self._link.enqueue(Command.STOP.value) 
-                self._step = 11
+                self._step = 12
                 self._sent = True
                 return None
             self._sent = True
@@ -146,6 +151,6 @@ class AcquireCBin:
             return None   
 
         
-        if self._step == 11 and event and event.name == "STOP":
+        if self._step == 12 and event and event.name == "STOP":
             return Phase.FINISH        
 
