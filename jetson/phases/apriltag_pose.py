@@ -81,19 +81,19 @@ def readApriltag(tagID,dir):
                 # 6b. Draw the detection on the image
                 #----------------------------------------
                 # Draw the outline of the tag
-                for i in range(4):
-                    cv2.line(
-                        undistorted,
-                        tuple(corners[i]),
-                        tuple(corners[(i+1) % 4]),
-                        (0, 255, 0),
-                        2
-                    )
+                ### for i in range(4):
+                ###     cv2.line(
+                ###         undistorted,
+                ###         tuple(corners[i]),
+                ###         tuple(corners[(i+1) % 4]),
+                ###         (0, 255, 0),
+                ###         2
+                ###     )
 
                 # Draw the tag ID near the center
                 center_xy = (int(r.center[0]), int(r.center[1]))
-                cv2.putText(undistorted, f"ID: {tag_id}", center_xy,
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                ### cv2.putText(undistorted, f"ID: {tag_id}", center_xy,
+                ###             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
                 #----------------------------------------
                 # 6c. Get Pose (R, t)
@@ -107,10 +107,10 @@ def readApriltag(tagID,dir):
                 # print(f"Detected Tag ID {tag_id}:")
                 # print(f"  Translation (x, y, z) [m]: {t.ravel()}")
 
-                cv2.putText(undistorted, "X: " + str(round(float(t[0]),2)) + ", Y: " + str(round(float(t[1]),2)) + ", Z: " + str(round(float(t[2]),2)), corners[0], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                ### cv2.putText(undistorted, "X: " + str(round(float(t[0]),2)) + ", Y: " + str(round(float(t[1]),2)) + ", Z: " + str(round(float(t[2]),2)), corners[0], cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
                 return (round(float(t[0]),2), round(float(t[2]),2)) # Returns (x, z)
 
-        cv2.imshow('AprilTag Detection', undistorted)
+        ### cv2.imshow('AprilTag Detection', undistorted)
 
         return (9999,9999)
         # Press 'q' to quit
