@@ -87,9 +87,6 @@ extern RobotMessage robotMessage;
         case GRAB_BIN:
             Serial.println("Grabbing Bin");
             grabBin();
-        case DEPOSIT_BIN:
-            Serial.println("Depositing bin");
-            depositBin();
         /* TODO: plug in other command handlers here */
         case STOP_DRIVE:
             updateDriveSetpoints(0, 0);
