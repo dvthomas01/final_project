@@ -10,7 +10,7 @@ const float b = 0.2;
 
 // Define enumeration of vehicle trajectories for followTrajectory
 enum trajectoryMode {
-    // STOP,
+    STOP,
     FORWARD,
     BACKWARD,
     CW,
